@@ -1,0 +1,66 @@
+#heading{
+    border: 1px solid black;
+    margin: 1px;
+    margin-left: 1%;
+    margin-right:1%;
+    padding: 1px;
+    height: 90px;
+}
+.heading-box{
+    border: 1px solid gray;
+    margin: 1px;
+    padding: 1px;
+    width: 21%;
+    float:left;  
+}
+#heading-tms, #heading-title{ 
+    width: 22%;
+}
+#heading-banner, #heading-featured{
+    width: 75%   
+}  
+#heading-banner, #heading-tms{
+    height: 63%;
+}
+#heading-featured, #heading-title {
+    height: 23%;
+}
+#aside{
+    border: 1px solid red;
+    margin: 1px;
+    margin-left: 1%;
+    margin-right:1%;
+    padding: 1px;
+    width: 21%;
+    float:right;
+    height: 800px;
+}
+.aside-box{
+    border: 1px solid orange;
+    margin: 1px;
+    padding: 1px;       
+}
+
+
+#bolder{
+    border: 1px solid blue;
+    margin: 1px;
+    margin-left: 1%;
+    margin-right:1%;
+    padding: 1px; 
+    width: 73%;
+    float:left;
+    height: 800px;
+    overflow: scroll
+}
+    
+}
+.threads_icon{
+    border: 1px solid green;
+    margin: 1px;
+    padding: 1px;
+}
+.threads_icon:hover{
+    border: 1px solid green;
+    background-color: green; 
+}
