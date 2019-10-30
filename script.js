@@ -312,7 +312,8 @@ var mainFunction = function(){
                         .attr("class","thread_description")
                         .text(function(){return "Pages: "+aFilmData.pages})
             })
-            topNavButtons("home","null",0) 
+            topNavButtons("home","null",0)
+            warningbutton()
 }
 
         //Adds Secondary Data from Promise to a page
@@ -385,20 +386,22 @@ var mainFunction = function(){
         drawpostpage()
         console.log("*******(PATH TEST)",Data)
         console.log("*******(PATH TEST)",Data.posts)
+            
+            
         d3.select("#P-Holder")
         .append("div")
         .selectAll("span")
         .data(Data.posts)
         .enter()
         .append("div")
-        .attr("class","threads_icon")
-        .attr("id",function(aData){return "id_" + aData.no})
-        .text(function(aData){return aData.com})
+        .attr("class","threads_icon post")
+        .attr("id",function(aData){return "p" + aData.no})
+        .html(function(aData){return aData.com})
         .on("click",function(aData){
-            console.log("(PATH TEST)",aData)
-            console.log("(PATH TEST)",datalink)
-            console.log("(PATH TEST)",aData.no)
-            tertiaryDataPromise(Data,aData.no,datalink)
+            //console.log("(PATH TEST)",aData)
+            //console.log("(PATH TEST)",datalink)
+            //console.log("(PATH TEST)",aData.no)
+            tertiaryDataPromise(Data,aData.no,Datalink)
                 }   )
         .on("mouseover",function(aFilmData){
                 d3.selectAll("#T-Info *").remove()
@@ -442,16 +445,22 @@ var mainFunction = function(){
             d3.select("#fou-featured").on("click",function(){
                 if(back == "home"){drawBroadpage();primaryDataPromise();}
                 if(back == "thre"){drawthreadpage();;secondaryDataPromise(link,page)}
-        })
+        })}
+            
         var warningbutton = function() {
-             d3.select("#aside-warning").on("click"function(){
+             d3.select("#aside-warning").on("click",function(){
                  d3.select("#aside-warning")
-                     .append("p")
-                     .attr("class","thread_description")
-                        .text(function(){return aFilmData.meta_description})
-             })
-        }  
-    }
+                    .style("height","")
+                 
+                 d3.select("#aside-warning")
+                    .append("p")
+                    .text("test")})
+        
+                 
+                     
+             }
+         
+    
     
     //Start
     primaryDataPromise()
