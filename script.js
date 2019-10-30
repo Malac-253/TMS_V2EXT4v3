@@ -1,118 +1,95 @@
 
-//main function for success 
-var codeMain = function(filmData)
-{
-    addtopageData(filmData);
-    
-}
 
-var drawHomepage = function(filmData)
-{
+var drawBroadpage = function(){
     d3.selectAll("body *").remove()
     d3.select("body").append("div").attr("id","heading")
-    d3.select("#heading").append("h1").attr("id","heading-text").text("Choose a Movie!")
-    d3.select("body").append("div").attr("id", "banner").text("Click on a title to see more!")
-    d3.select("body").append("div").attr("id", "bolder").text("")
-    d3.select("body").append("div").attr("id", "info-box").text("")
+    
+        d3.select("#heading").append("div").attr("id","heading-tms").attr("class","heading-box")
+            d3.select("#heading-tms").append("p").attr("id","p-tms").attr("class","heading-text").text("TMS")
+    
+        d3.select("#heading").append("div").attr("id","heading-banner").attr("class","heading-box")
+            d3.select("#heading-banner").append("p").attr("id","p-banner").attr("class","heading-text").text("Choose a Broad")
+    
+        d3.select("#heading").append("div").attr("id","heading-title").attr("class","heading-box")
+            d3.select("#heading-title").append("p").attr("id","p-title").attr("class","heading-text").text("4 Chan Safe Display")
+    
+        d3.select("#heading").append("div").attr("id","heading-featured").attr("class","heading-box")
+            d3.select("#heading-featured").append("p").attr("id","p-featured").attr("class","heading-text").text("Featured(Safe) Broads")
+    
+        d3.select("#heading").append("div").attr("id","heading-err").attr("class","heading-box")
+    
+    d3.select("body").append("div").attr("id","aside")
+    
+        d3.select("#aside").append("div").attr("id","aside-warning").attr("class","aside-box")
+            d3.select("#aside-warning").append("p").attr("id","p-warning").attr("class","aside-text").text("Click Here for Warning")
+    
+        d3.select("#aside").append("div").attr("id","aside-description").attr("class","aside-box")
+            d3.select("#aside-description").append("p").attr("id","p-description").attr("class","aside-text").text("Description")
+    
+        d3.select("#aside").append("div").attr("id","aside-info").attr("class","aside-box")
+            d3.select("#aside-info").append("p").attr("id","p-info").attr("class","aside-text").text("Info")
+    
+    
+    d3.select("body").append("div").attr("id","B-Holder")
+    
+    d3.select("body").append("div").attr("id","bottom")
+    
     d3.select("body").append("script").attr("src", "https://d3js.org/d3.v5.min.js")
     d3.select("body").append("link").attr("href", "style.css").attr("rel","stylesheet").attr("type","text/css")
- d3.select("body").append("script").attr("type","text/javascript").attr("src","script.js")
-    
-    addtopageData(filmData);
+    d3.select("body").append("script").attr("type","text/javascript").attr("src","script.js")
 }
 
-//draws the pages for each film
-var drawFilmpage = function(aFilmData,filmData)
-{
+var drawthreadpage = function(){
     d3.selectAll("body *").remove()
     d3.select("body").append("div").attr("id","heading")
-    d3.select("#heading").append("h1").attr("id","heading-text").text(aFilmData.title)
-    d3.select("body").append("div").attr("id", "banner")
-        d3.select("#banner").append("p").attr("class","director").text("Director: "+aFilmData.director)
-        d3.select("#banner").append("p").attr("class","producer").text("Producer: " +aFilmData.producer)
-        d3.select("#banner").append("p").attr("class","release_date").text("Release Date: "+aFilmData.release_date)
-        d3.select("#banner").append("p").attr("class","rt_score").text("Rotten Tomatoes Score: "+aFilmData.rt_score)
-        d3.select("body").append("div").attr("id", "info-box").text("")
-        d3.select("#info-box").append("p").attr("class","movie_description").text("Description:  "+aFilmData.description)
-        d3.select("body").append("div").attr("id", "back-button").text("Click to Go Back")           .on("click",function(aFilmData){
-                d3.selectAll("body *").remove()
-        d3.select("body").append("script").attr("src", "https://d3js.org/d3.v5.min.js")
     
-        
-        d3.select("body").append("script").attr("type","text/javascript").attr("src","script.js")    
-                console.log("filmData")
-                    drawHomepage(filmData)
-                // Promise to get data from API
-                var dataPromise = d3.json("https://ghibliapi.herokuapp.com/films")
-                dataPromise.then(
-                    function(filmData)
-                    {
-                        console.log("filmData: ", filmData)
-                        addtopageData(filmData)
-                        
-                    },
-                    function(err)
-                    {
-                        console.log("Failure - Error : ", err)
-                        d3.select("#heading").append("p").attr("id","heading-text").text(" Backup Movie Load failed  - Check Back later")
-                    }
-                )
-
-        
-                    })
-d3.select("body").append("link").attr("href", "style.css").attr("rel","stylesheet").attr("type","text/css")
+        d3.select("#heading").append("div").attr("id","heading-tms").attr("class","heading-box")
+            d3.select("#heading-tms").append("p").attr("id","p-tms").attr("class","heading-text").text("TMS")
+    
+        d3.select("#heading").append("div").attr("id","heading-banner").attr("class","heading-box")
+            d3.select("#heading-banner").append("p").attr("id","p-banner").attr("class","heading-text").text("Choose a Thread")
+    
+        d3.select("#heading").append("div").attr("id","heading-title").attr("class","heading-box")
+            d3.select("#heading-title").append("p").attr("id","p-title").attr("class","heading-text").text("4 Chan Safe Display")
+    
+        d3.select("#heading").append("div").attr("id","heading-featured").attr("class","heading-box")
+            d3.select("#heading-featured").append("p").attr("id","p-featured").attr("class","heading-text").text("Featured(Safe) Broads")
+    
+        d3.select("#heading").append("div").attr("id","heading-err").attr("class","heading-box")
+    
+    d3.select("body").append("div").attr("id","T-Holder")
+    
+    d3.select("body").append("div").attr("id","T-info")
+    
+    d3.select("body").append("div").attr("id","bottom")
+    d3.select("#bottom").append("div").attr("class","pagebutton").attr("id","pagebutton1").text("<<< page")
+    d3.select("#bottom").append("div").attr("class","pagebutton").attr("id","pagebutton1").text("page >>>")
+    
+    d3.select("body").append("script").attr("src", "https://d3js.org/d3.v5.min.js")
+    d3.select("body").append("link").attr("href", "style.css").attr("rel","stylesheet").attr("type","text/css")
+    d3.select("body").append("script").attr("type","text/javascript").attr("src","script.js")
 }
 
-
-//code to add in and bind the data
-var addtopageData = function(filmData)
-{
-        
-        
-        d3.select("#bolder")
-        .append("div")
-        .selectAll("span")
-        .data(filmData)
-        .enter()
-        .append("div")
-        .attr("class","threads_icon")
-        .attr("id",function(aFilmData){return "id_" + aFilmData.board})
-        .text(function(aFilmData){return aFilmData.title})
-        .on("click",function(aFilmData){       
-          drawFilmpage(aFilmData,filmData)
-                }   )
-        .on("mouseover",function(aFilmData){
-                d3.selectAll("#aside-info *").remove()
-                d3.select("#aside-info")
-                    .append("div")
-                    .attr("class","thread_description")
-                    .text(function(){return aFilmData.meta_description})
-                    })
-                    
-}
-
-// Promise to get data from API
-
+//main function for success 
 var mainFunction = function(){
-    
     //Web page event for the Boards pages
     var boardWebEvent = function(boards){
-        
-        addtopageData(boards.boards)
-        
-        
-        
-        
-        return boards.boards[3].board} 
+        primaryAddToPageData(boards.boards)
+        } 
     
     //Web page event for the threads pages
-    var threadWebEvent = function(threads){return threads[0].threads[0].no}
+    var threadWebEvent = function(threads,threadlink){
+        secondaryAddToPageData(threads,threadlink)
+    }
     
     //Web page event for the post pages
-    var postsWebEvent = function(posts){return "Home"}
+    var postsWebEvent = function(posts,postslink,threadlink){
+        tertiaryAddToPageData(posts,postslink,threadlink)
+        
+        return "Home"}
     
     //Tertiary Data Promise - Gets Posts for thread
-    var tertiaryDataPromise = function(postslink,threadlink){
+    var tertiaryDataPromise = function(threadData,postslink,threadlink){
         //note
         console.log("----------------------------------")
         console.log("(PROCESS -) Tertiary Data Promise")
@@ -127,15 +104,17 @@ var mainFunction = function(){
             {
                 console.log("(OBJECT --) Posts: ", posts)
                 console.log("(OBJECT EX) ^- EX: posts.posts[1].com: ", posts.posts[1].com)
-                postsWebEvent(posts) 
+                postsWebEvent(posts,postslink,threadlink) 
             },
             function(err)
             {
-                console.log("Failure - Error : ", err)
-                d3.select("#heading").append("p").attr("id","heading-text").text(" Full Movie Load failed - Check Back later")
+                console.log("(ERR -M) Failure - Error : ", err)
+                d3.selectAll("#heading-err *").remove()
+                d3.select("#heading-err").append("p").attr("id","heading-errs").text("Load failed - Check Console")
             }
         )     
     }
+    
     //Secondary Data Promise - Gets Threads for broad
     var secondaryDataPromise = function(threadlink){
         //note
@@ -152,15 +131,18 @@ var mainFunction = function(){
             {
                 console.log("(OBJECT --) threads: ", threads)
                 console.log("(OBJECT EX) ^- EX: threads[0].threads[0].no: ", threads[0].threads[0].no)
-                tertiaryDataPromise(threadWebEvent(threads),threadlink) 
+                
+                threadWebEvent(threads,threadlink) 
             },
             function(err)
             {
                 console.log("(ERR -M) Failure - Error : ", err)
-                d3.select("#heading").append("p").attr("id","heading-text").text(" Full Movie Load failed - Check Back later")
+                d3.selectAll("#heading-err *").remove()
+                d3.select("#heading-err").append("p").attr("id","heading-errs").text("Load failed - Check Console")
             }
         ) 
     }  
+    
     //Primary Data Promise - Gets broads
     var primaryDataPromise = function(){
         //note
@@ -176,18 +158,166 @@ var mainFunction = function(){
             function(boards)
             {
                 console.log("(OBJECT --) boards: ", boards)
+                //drawBroadpage()
                 console.log("(OBJECT EX) ^- EX: boards.boards[3].board: ", boards.boards[3].board)
-                secondaryDataPromise(boardWebEvent(boards))
+                boardWebEvent(boards)
             },
             function(err)
             {
                 console.log("(ERR -M) Failure - Error : ", err)
-                d3.select("#heading").append("p").attr("id","heading-text").text(" Full Movie Load failed - Check Back later")
-            }
-        )
+                d3.selectAll("#heading-err *").remove()
+                d3.select("#heading-err").append("p").attr("id","heading-errs").text("Load failed - Check Console")
+            
+            })
     }
     
-    primaryDataPromise()
+    //Adds Primary Data from Promise to a page
+    var primaryAddToPageData = function(Data){ 
+        
+        d3.select("#B-Holder")
+        .append("div")
+        .selectAll("span")
+        .data(Data)
+        .enter()
+        .append("div")
+        .attr("class","threads_icon")
+        .attr("id",function(Data){return "id_" + Data.board})
+        .text(function(Data){return Data.title})
+        .on("click",function(aData){
+            console.log("(PATH TEST)",aData)
+            secondaryDataPromise(aData.board)
+                }   )
+        .on("mouseover",function(aFilmData){
+                d3.selectAll("#aside-description *").remove()
+            
+                d3.select("#aside-description").append("p").attr("id","p-description").attr("class","aside-text").text("Description :")
+            
+                d3.select("#aside-description")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return aFilmData.meta_description})
+                    
+                
+                d3.selectAll("#aside-info *").remove()
+            
+                d3.select("#aside-info").append("p").attr("id","p-description").attr("class","aside-text").text("Info :")
+            
+                d3.select("#aside-info")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return "Title: "+aFilmData.title})
+            
+                d3.select("#aside-info")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return "Pages: "+aFilmData.pages})
+                    
+        
+        })
+                    
+    }
     
+    //Adds Secondary Data from Promise to a page
+    var secondaryAddToPageData = function(Data,datalink){ 
+        drawthreadpage()
+        //console.log("*******(PATH TEST)",Data)
+        //console.log("*******(PATH TEST)",Data[0].threads)
+        d3.select("#T-Holder")
+        .append("div")
+        .selectAll("span")
+        .data(Data[0].threads)
+        .enter()
+        .append("div")
+        .attr("class","threads_icon")
+        .attr("id",function(aData){return "id_" + aData.no})
+        .text(function(aData){return aData.no})
+        .on("click",function(aData){
+            console.log("(PATH TEST)",aData)
+            console.log("(PATH TEST)",datalink)
+            console.log("(PATH TEST)",aData.no)
+            tertiaryDataPromise(Data,aData.no,datalink)
+                }   )
+        .on("mouseover",function(aFilmData){
+                d3.selectAll("#T-Info *").remove()
+            
+                d3.select("#aside-description").append("p").attr("id","p-description").attr("class","aside-text").text("Description :")
+            
+                d3.select("#aside-description")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return aFilmData.meta_description})
+                    
+                
+                d3.selectAll("#T-info *").remove()
+            
+                d3.select("#T-info").append("p").attr("id","p-description").attr("class","aside-text").text("Info :")
+            
+                d3.select("#T-info")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return "last_modified: "+aFilmData.last_modified})
+            
+                d3.select("#T-info")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return "replies: "+aFilmData.replies})
+                    
+        
+        })
+        //console.log("********S*****(PATH TEST) done",)            
+    }
+    
+    //Adds Tertiary Data from Promise to a page
+    var tertiaryAddToPageData = function(Data,Datalink,Pastlink){ 
+        drawthreadpage()
+        console.log("*******(PATH TEST)",Data)
+        console.log("*******(PATH TEST)",Data.posts)
+        d3.select("#T-Holder")
+        .append("div")
+        .selectAll("span")
+        .data(Data.posts)
+        .enter()
+        .append("div")
+        .attr("class","threads_icon")
+        .attr("id",function(aData){return "id_" + aData.no})
+        .text(function(aData){return aData.com})
+        .on("click",function(aData){
+            console.log("(PATH TEST)",aData)
+            console.log("(PATH TEST)",datalink)
+            console.log("(PATH TEST)",aData.no)
+            tertiaryDataPromise(Data,aData.no,datalink)
+                }   )
+        .on("mouseover",function(aFilmData){
+                d3.selectAll("#T-Info *").remove()
+            
+                d3.select("#aside-description").append("p").attr("id","p-description").attr("class","aside-text").text("Description :")
+            
+                d3.select("#aside-description")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return aFilmData.meta_description})
+                    
+                
+                d3.selectAll("#T-info *").remove()
+            
+                d3.select("#T-info").append("p").attr("id","p-description").attr("class","aside-text").text("Info :")
+            
+                d3.select("#T-info")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return "last_modified: "+aFilmData.last_modified})
+            
+                d3.select("#T-info")
+                    .append("p")
+                    .attr("class","thread_description")
+                    .text(function(){return "replies: "+aFilmData.replies})
+                    
+        
+        })
+        //console.log("********S*****(PATH TEST) done",)            
+    }
+    
+    //Start
+    primaryDataPromise()
 }
 mainFunction()
