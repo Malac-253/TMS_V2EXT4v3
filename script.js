@@ -384,14 +384,15 @@ var mainFunction = function(){
         //Adds Tertiary Data from Promise to a page
         var tertiaryAddToPageData = function(Data,Datalink,Pastlink,oldpage){ 
         drawpostpage()
-        console.log("*******(PATH TEST)",Data)
-        console.log("*******(PATH TEST)",Data.posts)
-            
+        //console.log("*******(PATH TEST)",Data)
+        //console.log("*******(PATH TEST)",Data.posts)
+          
+        var pData = postConverter(Data.posts)
             
         d3.select("#P-Holder")
         .append("div")
         .selectAll("span")
-        .data(Data.posts)
+        .data(pData)
         .enter()
         .append("div")
         .attr("class","threads_icon post")
@@ -401,7 +402,7 @@ var mainFunction = function(){
             //console.log("(PATH TEST)",aData)
             //console.log("(PATH TEST)",datalink)
             //console.log("(PATH TEST)",aData.no)
-            tertiaryDataPromise(Data,aData.no,Datalink)
+            tertiaryDataPromise(pData,aData.no,Datalink)
                 }   )
         .on("mouseover",function(aFilmData){
                 d3.selectAll("#T-Info *").remove()
@@ -454,11 +455,45 @@ var mainFunction = function(){
                  
                  d3.select("#aside-warning")
                     .append("p")
-                    .text("test")})
+                    .text("4chan can be bad - Like the code for this text")})
         
                  
                      
              }
+        
+        var postConverter = function(data) {
+            var ans = []
+            console.log("************************", data)
+            
+            
+            data.forEach(function(element1) {
+                
+                console.log('post',element1.com);
+                console.log(element1.no);
+                var need = element1.no
+                data.forEach(function(element2){
+                    var check = element2.com.search("<a href")
+                    var post = {}
+                    var reply = []
+                    //console.log(check);
+                    if(check <= 0 ){
+                        var find = element2.com.search(need)
+                        if(find > 0){
+                            console.log(find,"REPLY -------",element2.com);
+                            post.com = element2.com.replace('<a href="p'+element1.no+'" class="quotelink">&gt;&gt;'+element1.no+'</a>')
+                            
+                        }
+                    }
+                })
+                
+                
+            });
+            
+            
+            
+            
+        return data   
+        }
          
     
     
