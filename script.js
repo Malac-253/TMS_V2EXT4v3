@@ -1,7 +1,9 @@
 
 //main function for success 
 var mainFunction = function(){
-   
+        var test = false
+        //var test = true
+    
     //drawing to pages
         //draws main page
         var drawBroadpage = function(){
@@ -193,16 +195,18 @@ var mainFunction = function(){
             console.log("----------------------------------")
             console.log("(PROCESS -) Tertiary Data Promise")
             //Promise Prep
+            var BASELINK = "https://cors-anywhere.herokuapp.com/"
             var REALLINK = "https://a.4cdn.org/"+threadlink+"/thread/"+postslink+".json"
             console.log("(LINK - FR) *** REALLINK TO USE (for: "+threadlink+"-"+postslink+"):",REALLINK ) 
             console.log("(FILE - FR) *** FILELINK TO USE (for: "+threadlink+"-"+postslink+"): "+threadlink+postslink+"posts.json")
             //Promise Main
             var dataPromise = d3.json(threadlink+postslink+"posts.json")
+            if (!test){var dataPromise = d3.json(BASELINK+REALLINK)}
             dataPromise.then(
                 function(posts)
                 {
-                    console.log("(OBJECT --) Posts: ", posts)
-                    console.log("(OBJECT EX) ^- EX: posts.posts[1].com: ", posts.posts[1].com)
+                    //console.log("(OBJECT --) Posts: ", posts)
+                    //console.log("(OBJECT EX) ^- EX: posts.posts[1].com: ", posts.posts[1].com)
                     postsWebEvent(posts,postslink,threadlink,page) 
                 },
                 function(err)
@@ -220,16 +224,19 @@ var mainFunction = function(){
             console.log("----------------------------------")
             console.log("(PROCESS -) Secondary Data Promise")
             //Promise Prep
+            var BASELINK = "https://cors-anywhere.herokuapp.com/"
             var REALLINK = "https://a.4cdn.org/"+threadlink+"/threads.json"
             console.log("(LINK - FR) *** REALLINK TO USE (for: "+threadlink+"):",REALLINK )
             console.log("(FILE - FR) *** FILELINK TO USE (for: "+threadlink+"): "+threadlink+"threads.json")
             //Promise Main
+            //var dataPromise = d3.json(BASELINK+REALLINK)
             var dataPromise = d3.json(threadlink+"threads.json")
+            if (!test){var dataPromise = d3.json(BASELINK+REALLINK)}
             dataPromise.then(
                 function(threads)
                 {
-                    console.log("(OBJECT --) threads: ", threads)
-                    console.log("(OBJECT EX) ^- EX: threads[0].threads[0].no: ", threads[0].threads[0].no)
+                    //console.log("(OBJECT --) threads: ", threads)
+                    //console.log("(OBJECT EX) ^- EX: threads[0].threads[0].no: ", threads[0].threads[0].no)
 
                     threadWebEvent(threads,threadlink,page) 
                 },
@@ -248,17 +255,20 @@ var mainFunction = function(){
         console.log("----------------------------------")
         console.log("(PROCESS -) Primary Data Promise")
         //Promise Prep
+        var BASELINK = "https://cors-anywhere.herokuapp.com/" 
         var REALLINK = "https://a.4cdn.org/boards.json"
+        //var dataPromise = d3.json(BASELINK+"https://a.4cdn.org/boards.json")
         var dataPromise = d3.json("boards.json")
+        if (!test){var dataPromise = d3.json(BASELINK+REALLINK)}
         console.log("(LINK - FR) *** REALLINK TO USE (for: boards):",REALLINK )
         console.log("(FILE - FR) *** FILELINK TO USE (for: boards): boards.json")  
         //Promise Main
         dataPromise.then(
             function(boards)
             {
-                console.log("(OBJECT --) boards: ", boards)
+                //console.log("(OBJECT --) boards: ", boards)
                 //drawBroadpage()
-                console.log("(OBJECT EX) ^- EX: boards.boards[3].board: ", boards.boards[3].board)
+                //console.log("(OBJECT EX) ^- EX: boards.boards[3].board: ", boards.boards[3].board)
                 boardWebEvent(boards)
             },
             function(err)
@@ -284,7 +294,7 @@ var mainFunction = function(){
             .attr("id",function(Data){return "id_" + Data.board})
             .text(function(Data){return Data.title})
             .on("click",function(aData){
-                console.log("(PATH TEST)",aData)
+                //console.log("(PATH TEST)",aData)
                 secondaryDataPromise(aData.board,0)
                     }   )
             .on("mouseover",function(aFilmData){
@@ -349,7 +359,7 @@ var mainFunction = function(){
 
                     d3.selectAll("#T-info *").remove()
 
-                    d3.select("#T-info").append("p").attr("id","p-description").attr("class","aside-text").text("Info :")
+                    d3.select("#T-info").append("p").attr("id","p-description").attr("class","aside-text").text("Info :",datalink)
 
                     d3.select("#T-info")
                         .append("p")
@@ -388,6 +398,8 @@ var mainFunction = function(){
         //console.log("*******(PATH TEST)",Data.posts)
           
         var pData = postConverter(Data.posts)
+        
+        
             
         d3.select("#P-Holder")
         .append("div")
@@ -398,39 +410,43 @@ var mainFunction = function(){
         .attr("class","threads_icon post")
         .attr("id",function(aData){return "p" + aData.no})
         .html(function(aData){return aData.com})
-        .on("click",function(aData){
-            //console.log("(PATH TEST)",aData)
-            //console.log("(PATH TEST)",datalink)
-            //console.log("(PATH TEST)",aData.no)
-            tertiaryDataPromise(pData,aData.no,Datalink)
-                }   )
-        .on("mouseover",function(aFilmData){
-                d3.selectAll("#T-Info *").remove()
+        
+        
+        console.log(pData) 
+        
+        
             
-                d3.select("#aside-description").append("p").attr("id","p-description").attr("class","aside-text").text("Description :")
-            
-                d3.select("#aside-description")
-                    .append("p")
-                    .attr("class","thread_description")
-                    .text(function(){return aFilmData.meta_description})
-                    
+        var putInreplys = function(pData){
                 
-                d3.selectAll("#T-info *").remove()
-            
-                d3.select("#T-info").append("p").attr("id","p-description").attr("class","aside-text").text("Info :")
-            
-                d3.select("#T-info")
-                    .append("p")
-                    .attr("class","thread_description")
-                    .text(function(){return "last_modified: "+aFilmData.last_modified})
-            
-                d3.select("#T-info")
-                    .append("p")
-                    .attr("class","thread_description")
-                    .text(function(){return "replies: "+aFilmData.replies})
+                pData.forEach(function(element){
+                    if(!(element.replieCount == undefined)){
+                        element.replies = []
+                    }
+                    if (element.replies.length > 0){  
+                        d3.select("#P"+element.no)
+                            .append("div")
+                            .selectAll("span")
+                            .data(element.replies)
+                            .enter()
+                            .append("div")
+                            .attr("class","threads_icon post reply")
+                            .attr("id",function(element){return "P" + element.no})
+                            .html(function(aData){return aData.com})
+                        //console.log(element.replies) 
+                        putInreplys(element.replies)
+
+                }});
+            }
+
+        
+        putInreplys(pData)
+                //d3.select("#T-info")
+                    //.append("p")
+                    //.attr("class","thread_description")
+                    //.text(function(){return "replies: "+aFilmData.replies})
                     
         
-        })
+        
         //Top nav
             //console.log(Pastlink)
             //console.log(oldpage)
@@ -461,41 +477,87 @@ var mainFunction = function(){
                      
              }
         
+
+        //Gets post and puts them with thire replys
         var postConverter = function(data) {
             var ans = []
-            console.log("************************", data)
+            //console.log("************************", data)
             
             
-            data.forEach(function(element1) {
+            data.forEach(function(aPost) {
                 
-                console.log('post',element1.com);
-                console.log(element1.no);
-                var need = element1.no
-                data.forEach(function(element2){
-                    var check = element2.com.search("<a href")
-                    var post = {}
-                    var reply = []
-                    //console.log(check);
-                    if(check <= 0 ){
-                        var find = element2.com.search(need)
-                        if(find > 0){
-                            console.log(find,"REPLY -------",element2.com);
-                            post.com = element2.com.replace('<a href="p'+element1.no+'" class="quotelink">&gt;&gt;'+element1.no+'</a>')
+                var level = 0
+                var currPost = {}
+                    currPost.no = aPost.no
+                    currPost.now = aPost.now
+                    currPost.name = aPost.name
+                    currPost.replieCount = aPost.replies
+                    currPost.com = aPost.com
+                    currPost.sub = aPost.sub
+                    currPost.level = level
+                    currPost.replies = []
+                
+                //console.log("POST - ",currPost.no," - :",currPost.com);
+                
+                
+    
+                var getReplys = function(data,lookingFor,replyBox,level) {
+                    //console.log(lookingFor);
+                    data.forEach(function(onePost){ 
+                        //console.log(onePost)
+                        if (onePost.com == undefined){
+                            if (!(onePost.filename == undefined))
+                            {onePost.com = ("TMS Console - 'UNPROTECTED IMAGE FILE' File Name:", onePost.filename)
+                            }else{
+                               onePost.com = ("TMS Console - 'UNPROTECTED IMAGE FILE' File Name: CAN't LOCATE") 
+                            }
+                        }
+                        var check = onePost.com.includes('<a href') //this means it is a reply of some sort
+                        //console.log("if it is a reply of some sort",check)
+                        if(check >= 0 ){ //if it is a reply of some sort
+                            var find = onePost.com.includes(lookingFor) //checks if it is a rely for curr post
+                            //console.log("//checks if it is a rely for curr post" , find)
+                            if(find > 0){
+                                //onePost.com = onePost.com.replace('<a href="p'+aPost.no+'" class="quotelink">&gt;&gt;'+aPost.no+'</a>')
+                                level = level + 1
+                                //console.log(find,level,"REPLY TO:",lookingFor,"-------",onePost.no," - :",onePost.com);
+                                var thePost = {}// create post OBject
+                                    thePost.no = onePost.no
+                                    thePost.now = onePost.now
+                                    thePost.name = onePost.name
+                                    thePost.replieCount = onePost.replies
+                                    thePost.com = onePost.com
+                                    thePost.sub = onePost.sub
+                                    thePost.level = level
+                                    thePost.replies = []
+                                
+                                getReplys(data,thePost.no,thePost.replies,(level))//check for replys
+                                level = level - 1
+                                replyBox.push(thePost)
+                                    
+                            }
                             
                         }
-                    }
-                })
+   
+                    })
+                     
+                }
                 
+                //console.log("NOT <a href in it (IS A MAIN COM)", !aPost.com.includes('<a href'))
                 
-            });
-            
-            
-            
-            
-        return data   
+                if (!aPost.com.includes('<a href')){
+                    getReplys(data,currPost.no,currPost.replies,level)
+                    ans.push(currPost)
+                }
+                
+                //ans.push(currPost)
+            })  
+        //console.log(ans)    
+        return ans;
         }
-         
     
+         
+        
     
     //Start
     primaryDataPromise()
