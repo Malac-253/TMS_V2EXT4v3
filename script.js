@@ -1042,7 +1042,6 @@ var mainFunction = function(){
     if ('speechSynthesis' in window) {
         d3.select('#speak').on("click",async function(){
             
-            
             //helpers
                 //Uses configs for video
                 function videoPageSetUp() {
@@ -1076,6 +1075,12 @@ var mainFunction = function(){
                     
                     return wordsperminans
                 }
+                
+                //finds the words count
+                function wordcount(str) { 
+                    return str.split(" ").length;
+                }
+            
             //mainws
                 //Handles speaking
                 async function massSpeakingtoolv1(pData){
@@ -1469,6 +1474,7 @@ var mainFunction = function(){
                 //Start of massSpeakingtoolv8
                     var deferred = $.Deferred();
                     var timeoutResumeInfinity
+                    window.speechSynthesis.cancel();
                     if(pData.length == i ){
                         var promiseTEMP =  massSpeakingtoolv8(tester,oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
                         promiseTEMP.then(function(result) {
@@ -1476,33 +1482,21 @@ var mainFunction = function(){
                         }) 
                     }
                     else{
-                        console.log(tester,pData,i,oldpData,oldi)
+                        //console.log(tester,pData,i,oldpData,oldi)
                         var allVoices = window.speechSynthesis.getVoices();
                         var BotVoicer = new SpeechSynthesisUtterance();
                         BotVoicer.voice = allVoices[5]
-                        BotVoicer.rate = 1.3
+                        BotVoicer.rate = 1.5
                         BotVoicer.pitch = 1
-                        
-                        var sentec  = pData[i].com.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|")
-                        console.log(sentec)
-                        Bottext = textfixer(pData[i].com)
-                        
-                        BotVoicer.text = Bottext
+                        BotVoicer.text = textfixer(pData[i].com)
                         //fakeonstart
                         var fakeonstart = async function(e) {
-                            resumeInfinity();
+                            resumeInfinity(pData[i].com);
                             //console.log(" ----- pretend Speak start time ")
                             //console.log(" ----- pretend Speak start time ", e)
                             //video manger test
                             pageEdittest(pData,i)
-                            var tester = async function(texter){
-                                console.log(texter)
-                            }
-
-                            for (r = 0; r < sentec.length; r++) {
-                                tester(sentec[r])
-                                await sleep(1000)
-                            } 
+                             
                         }
                         //fakeonend
                         var fakeonend = function(e) {
@@ -1522,7 +1516,7 @@ var mainFunction = function(){
                                 if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
                                 pData[i].replies[0].oldi = i
                                 pData[i].replies[0].olddata = pData
-                                console.log(" ----- promiseTEMP type 1 - (Steps In)");
+                                //console.log(" ----- promiseTEMP type 1 - (Steps In)");
                                 var promiseTEMP = massSpeakingtoolv8(tester,pData[i].replies,0,pData,i)
                                 promiseTEMP.then(function(result) { 
                                     //This is to step to the next replys (Steps Down)
@@ -1602,15 +1596,20 @@ var mainFunction = function(){
                         
                         
                         window.speechSynthesis.cancel();
-                        window.speechSynthesis.speak(BotVoicer);
-                        window.speechSynthesis.resume();
-                        //console.log("window.speechSynthesis.speak(BotVoicer) - Com:", pData[i].com);
+                        if (!pData[i].used){
+                            pData[i].used = true
+                            window.speechSynthesis.cancel();
+                            window.speechSynthesis.speak(BotVoicer);
+                            console.log("window.speechSynthesis.speak(BotVoicer) - Com:", BotVoicer.text);
+                            console.log("Step: " + i);
+                        }
+                        //window.speechSynthesis.speak(BotVoicer);
+                        //window.speechSynthesis.resume();
+                        //console.log("window.speechSynthesis.speak(BotVoicer) - Com:", textfixer(pData[i].com));
                         //await sleep(1000)
                         //fakeonend()
                         //printing 
-                        console.log("Step: " + i);
-                        //ending
-                        
+                        //ending   
                     }  
                 
                 //reture sub end    
@@ -1619,10 +1618,13 @@ var mainFunction = function(){
                 }
         
                 
-                function resumeInfinity() {
+                function resumeInfinity(text) {
                     window.speechSynthesis.resume();
                     
-                    timeoutResumeInfinity = setTimeout(resumeInfinity, 1000);
+                    //var wc = wordcount(text) 
+                    //if (wc <= 50)
+                    
+                    timeoutResumeInfinity = setTimeout(resumeInfinity, 3500);
                 }
             
                 function strip(html){
@@ -1631,17 +1633,20 @@ var mainFunction = function(){
                 }
             
                 function textfixer(text){
-                    
+                    var Rtext = text.match('link">.*</a>')
+                    if (Rtext != null){
+                        text = text.replace(Rtext,'link"></a>')
+                    }
                     text = strip(text)
+                    text = text.replace(">",'Quote,: ')
                     
-                    //if(text)
+                    var badwords = ["faggot", "bar", "blah", "gay","faggots", "gays"];
                     
-                    var badwords = ["faggot", "bar", "blah", "baz"];
                     for (var i = 0; i < badwords.length; i++) {
                         var pat = badwords[i].slice(0, -1).replace(/([a-z])/g, "$1[^a-z]*") + badwords[i].slice(-1);
                         var rxp = new RegExp(pat, "ig");
-                        text = text.replace(rxp, "*BLEEP*");
-}
+                        text = text.replace(rxp, " *BLEEP* ");
+                    }
                     
                     return text  
                 }
@@ -1841,8 +1846,8 @@ return deferred.promise();
                     d3.select("#text_holder")
                     .append("p")
                     .attr("class","Tester_text")
-                    .html(text[i].com)
-                    //.text(textfixer(text[i].com))
+                    //.text(text[i].com)
+                    .text(textfixer(text[i].com))
                     
                     d3.select("#text_holder")
                     .append("p")
@@ -2097,7 +2102,7 @@ return deferred.promise();
                 await sleep((words.length/wordspermin(words))*60000);
                 console.log("test 5 done")
         
-        console.log("pData",pData)
+            console.log("pData",pData)
             console.log("pData[1]com : ",pData[1].com)
             
             speaktool(pData[1].com)
