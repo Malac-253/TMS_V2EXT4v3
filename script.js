@@ -206,7 +206,10 @@ var mainFunction = function(){
                 var hardLink = dateStart.value.replace('http://boards.4channel.org/','').split('/thread/');
                 var BASELINK = "https://cors-anywhere.herokuapp.com/"
                 var REALLINK = "https://a.4cdn.org/"+hardLink[0]+"/thread/"+hardLink[1]+".json"
-            //Promise Main    
+            //Promise Main
+                
+            d3.select("#R-Holder").append("p").text("loading ...")
+                
             var dataPromise = d3.json(hardLink[0]+hardLink[1]+"posts.json")
             if (!test){var dataPromise = d3.json(BASELINK+REALLINK)}
             dataPromise.then(
@@ -470,8 +473,6 @@ var mainFunction = function(){
             //console.log(oldpage)
             topNavButtons("thre",Pastlink,0)           
     }
-           
-        convertDataPromise()
         
     //Other fuctions
     
@@ -496,6 +497,8 @@ var mainFunction = function(){
         //main Post adder function
         function putinreplyMain(Data,where,Datalink,Pastlink) {
             var pData = postConverter(Data.posts)
+            
+            
             
             //console.log("pData",pData)
             d3.selectAll((where+" *")).remove() 
@@ -571,7 +574,7 @@ var mainFunction = function(){
             
             
             
-        }
+         }
     
         //main Post adder tool, used in main function
         function putInreplys(pData,Datalink,Pastlink) {
@@ -968,7 +971,7 @@ var mainFunction = function(){
         function addLinkCodeHead(){
             //Links to code
             d3.select("head").append("script").attr("src", "https://d3js.org/d3.v5.min.js")
-            d3.select("head").append("link").attr("href", "style.css").attr("rel","stylesheet").attr("type","text/css")
+            //d3.select("head").append("link").attr("href", "style.css").attr("rel","stylesheet").attr("type","text/css")
             d3.select("head").append("script").attr("type","text/javascript").attr("src","script.js")
             d3.select("head").append("link").attr("href", "video.css").attr("rel","stylesheet").attr("type","text/css")
             
@@ -1034,82 +1037,141 @@ var mainFunction = function(){
         }
     
     
-    //The End Game, the goal of this hold thing
+    //The End Game, the goal of this whold thing
     async function TMSVidMain(Data,VidConfigs){
-    //getting data
-    var pData = postConverter(Data.posts)
-    //main if state
-    if ('speechSynthesis' in window) {
-        d3.select('#speak').on("click",async function(){
+    //(top) - TMSVidMain(Data,VidConfigs)
+        
+        //main if state
+        if ('speechSynthesis' in window) {
+        d3.select('#speak').on("click",async function (){
+            
+            //getting data
+            var pData = postConverter(Data.posts)
             
             //helpers
-                //Uses configs for video
-                function videoPageSetUp() {
-
-                }
-                
                 //Sets the WPM of the thing being said
                 var wordspermin = function(words){
-                    var wordsperminans = 140
-                    var wordsperminStr = 170
-                    var corrector = 3
-                    
-                    var lowl = 0
-                    var spacer = 5
-                    var mul = 6
-                    
-            if ((words.length >= lowl)&&(words.length <= (lowl+spacer))) {wordsperminans = wordsperminStr}
-            if ((words.length >= (lowl+(mul*1)))&&(words.length <= ((lowl+spacer)+(mul*1)))) {wordsperminans = wordsperminStr+(corrector *2)}
-            if ((words.length >= (lowl+(mul*2)))&&(words.length <= ((lowl+spacer)+(mul*2)))) {wordsperminans = wordsperminStr+(corrector *3)}
-            if ((words.length >= (lowl+(mul*3)))&&(words.length <= ((lowl+spacer)+(mul*3)))) {wordsperminans = wordsperminStr+(corrector *4)}
-            if ((words.length >= (lowl+(mul*4)))&&(words.length <= ((lowl+spacer)+(mul*4)))) {wordsperminans = wordsperminStr+(corrector *5)}
-            if ((words.length >= (lowl+(mul*5)))&&(words.length <= ((lowl+spacer)+(mul*5)))) {wordsperminans = wordsperminStr+(corrector *6)}
-            if ((words.length >= (lowl+(mul*6)))&&(words.length <= ((lowl+spacer)+(mul*6)))) {wordsperminans = wordsperminStr+(corrector *7)}
-            if ((words.length >= (lowl+(mul*7)))&&(words.length <= ((lowl+spacer)+(mul*7)))) {wordsperminans = wordsperminStr+(corrector *8)}
-            if ((words.length >= (lowl+(mul*8)))&&(words.length <= ((lowl+spacer)+(mul*8)))) {wordsperminans = wordsperminStr+(corrector *9)}
-            if ((words.length >= (lowl+(mul*9)))&&(words.length <= ((lowl+spacer)+(mul*9)))) {wordsperminans = wordsperminStr+(corrector *10)}
-            if ((words.length >= (lowl+(mul*10)))&&(words.length <= ((lowl+spacer)+(mul*10)))) {wordsperminans = wordsperminStr+(corrector *11)}
-            if ((words.length >= (lowl+(mul*11)))&&(words.length <= ((lowl+spacer)+(mul*11)))) {wordsperminans = wordsperminStr+(corrector *12)}
-            if ((words.length >= (lowl+(mul*12)))&&(words.length <= ((lowl+spacer)+(mul*12)))) {wordsperminans = wordsperminStr+(corrector *13)}
-                    //console.log(" --- --- highset",(lowl+spacer)+(mul*12))
-                    
-                    return wordsperminans
-                }
-                
+                        var wordsperminans = 140
+                        var wordsperminStr = 170
+                        var corrector = 3
+
+                        var lowl = 0
+                        var spacer = 5
+                        var mul = 6
+
+                if ((words.length >= lowl)&&(words.length <= (lowl+spacer))) {wordsperminans = wordsperminStr}
+                if ((words.length >= (lowl+(mul*1)))&&(words.length <= ((lowl+spacer)+(mul*1)))) {wordsperminans = wordsperminStr+(corrector *2)}
+                if ((words.length >= (lowl+(mul*2)))&&(words.length <= ((lowl+spacer)+(mul*2)))) {wordsperminans = wordsperminStr+(corrector *3)}
+                if ((words.length >= (lowl+(mul*3)))&&(words.length <= ((lowl+spacer)+(mul*3)))) {wordsperminans = wordsperminStr+(corrector *4)}
+                if ((words.length >= (lowl+(mul*4)))&&(words.length <= ((lowl+spacer)+(mul*4)))) {wordsperminans = wordsperminStr+(corrector *5)}
+                if ((words.length >= (lowl+(mul*5)))&&(words.length <= ((lowl+spacer)+(mul*5)))) {wordsperminans = wordsperminStr+(corrector *6)}
+                if ((words.length >= (lowl+(mul*6)))&&(words.length <= ((lowl+spacer)+(mul*6)))) {wordsperminans = wordsperminStr+(corrector *7)}
+                if ((words.length >= (lowl+(mul*7)))&&(words.length <= ((lowl+spacer)+(mul*7)))) {wordsperminans = wordsperminStr+(corrector *8)}
+                if ((words.length >= (lowl+(mul*8)))&&(words.length <= ((lowl+spacer)+(mul*8)))) {wordsperminans = wordsperminStr+(corrector *9)}
+                if ((words.length >= (lowl+(mul*9)))&&(words.length <= ((lowl+spacer)+(mul*9)))) {wordsperminans = wordsperminStr+(corrector *10)}
+                if ((words.length >= (lowl+(mul*10)))&&(words.length <= ((lowl+spacer)+(mul*10)))) {wordsperminans = wordsperminStr+(corrector *11)}
+                if ((words.length >= (lowl+(mul*11)))&&(words.length <= ((lowl+spacer)+(mul*11)))) {wordsperminans = wordsperminStr+(corrector *12)}
+                if ((words.length >= (lowl+(mul*12)))&&(words.length <= ((lowl+spacer)+(mul*12)))) {wordsperminans = wordsperminStr+(corrector *13)}
+                        //console.log(" --- --- highset",(lowl+spacer)+(mul*12))
+
+                        return wordsperminans
+                    }
+
                 //finds the words count
-                function wordcount(str) { 
-                    return str.split(" ").length;
+                function wordcount(str) {
+                        
+                        var ans = str.split(" ").length;
+                        if (str == undefined){ ans = 1; }
+                        return ans
                 }
             
-            //mainws
-                //Handles speaking
-                async function massSpeakingtoolv1(pData){
-                    
-                    window.speechSynthesis.cancel();
-                    //speaktool("Searcher",0)
-                    //await sleep(600)
+                //Resumes the speaker if it stops until it is expected to stop
+                function resumeInfinity(text) {
+                        window.speechSynthesis.resume();
 
-                    for (var i = 0; i < pData.length; i += 1) {
-                        await sleep(20)
-                        var senten = (pData[i].com).match(/\(?[^\.\?\!]+[\.!\?]\)?/g);
-                        if (senten == null){senten = []; senten[0] = pData[i].com;}
-                        console.log("(v1) Test "+(i+1)+ "start")
-                        console.log("(v1) Test "+(i+1)+" precheck :", senten)
-                        for (var r = 0; r < senten.length; r += 1) {
-                            var words = (senten[r]).split(" ");
-                                console.log("(v1) Test "+(i+1)+"."+(r+1)+" start")
-                                console.log(" ---(v1) Test "+(i+1)+ "."+(r+1)+" - com :",senten[r])
-                                console.log(" ---(v1) Test "+(i+1)+ "."+(r+1)+" - wordspermin ?:",wordspermin(words))
-                                console.log(" ---(v1) Test "+(i+1)+ "."+(r+1)+" - sleep time:",(words.length/wordspermin(words))*60000)
-                                console.log(" ---(v1) Test "+(i+1)+ "."+(r+1)+"- Word:",words.length)
-                            speaktool(senten[r],(i+1),(r+1))
-                            await sleep((words.length/wordspermin(words))*60000);
-                            console.log("(v1) Test "+(i+1)+"."+(r+1)+" done")
-                        }  
-                        console.log("(v1) Test "+(i+1)+ "done")
-                    }
+                        var wc = wordcount(text) 
+                        //if (wc <= 50)
+
+                        timeoutResumeInfinity = setTimeout(resumeInfinity, 3600);
                 }
-                async function massSpeakingtoolv2(pData){
+
+                //remove HTML from texts
+                function strip(html){
+                       var doc = new DOMParser().parseFromString(html, 'text/html');
+                       return doc.body.textContent || "";
+                }
+
+            //tools    
+                //Uses configs for video
+                function videoPageSetUp() {}
+            
+                //fuction to fix spoken and seen text
+                function textfixer(text){
+                        var Rtext = text.match('link">.*</a>')
+                        if (Rtext != null){
+                            text = text.replace(Rtext,'link"></a>')
+                        }
+                        text = strip(text)
+                        text = text.replace(">",'Quote,: ')
+
+                        var badwords = ["faggot", "bar", "blah", "gay","faggots", "gays"];
+
+                        for (var i = 0; i < badwords.length; i++) {
+                            var pat = badwords[i].slice(0, -1).replace(/([a-z])/g, "$1[^a-z]*") + badwords[i].slice(-1);
+                            var rxp = new RegExp(pat, "ig");
+                            text = text.replace(rxp, " *BLEEP* ");
+                        }
+
+                        return text  
+                }
+            
+                //raw speaking tool
+                function rawspeaktool(Stext,i,r){
+                        var deferred = $.Deferred();
+                        var allVoices = window.speechSynthesis.getVoices();
+                        var tester = new SpeechSynthesisUtterance(); 
+                            tester.voice = allVoices[5]
+                            tester.rate = 1.3
+                            tester.pitch = 1
+                            tester.text = Stext;
+                            tester.onend = function(e) {
+                                //console.log(" --- Test "+(i)+ "."+(r)+" Finished in " + (event.elapsedTime) + " millseconds.");
+                                //console.log(" --- Test "+(i)+ "."+(r)+" Finished")
+                                deferred.resolve(i);
+                            };   
+
+                        //console.log("Before") 
+                        window.speechSynthesis.cancel();
+                        window.speechSynthesis.speak(tester); 
+                        //console.log("After") 
+                        return deferred.promise();
+                    }
+            
+                //managing page event
+                function pageEdittest(text,i,oldpData,oldi){
+                        d3.selectAll("#text_holder *").remove()
+
+                        d3.select("#text_holder")
+                        .append("p")
+                        .attr("class","Tester_text")
+                        //.text(text[i].com)
+                        .text(textfixer(text[i].com))
+
+                        d3.select("#text_holder")
+                        .append("p")
+                        .attr("class","Tester_text")
+                        .text("This is the Level :" + text[i].level)
+
+                        d3.select("#text_holder")
+                        .append("p")
+                        .attr("class","Tester_text")
+                        .text("This is the index :" + (i+1) +"/"+text.length)
+                    }
+
+            //mains - massSpeakingtool managers
+                //Handles speaking
+                //main manager (1) version 1-7 - failures
+                async function massSpeakingtoolv1(pData){
 
                         window.speechSynthesis.cancel();
                         //speaktool("Searcher",0)
@@ -1117,293 +1179,317 @@ var mainFunction = function(){
 
                         for (var i = 0; i < pData.length; i += 1) {
                             await sleep(20)
-                            console.log("(v2) Test "+(i+1)+ "start")
-                            console.log("(v2) Test "+(i+1)+" precheck :", pData.com)
-                            
-                            var words = (pData[i].com).split(" ");
-                            console.log("(v2) Test "+(i+1)+" start")
-                            console.log(" ---(v2) Test "+(i+1)+ " - com :",pData[i].com)
-                            console.log(" ---(v2) Test "+(i+1)+ " - wordspermin ?:",wordspermin(words))
-                            console.log(" ---(v2) Test "+(i+1)+ " - sleep time:",(words.length/wordspermin(words))*60000)
-                            console.log(" ---(v2) Test "+(i+1)+ " - Word:",words.length)
-                            
-                            speaktool(pData[i].com,(i+1)),
-         
-                            await sleep((words.length/wordspermin(words))*60000);
-                            massSpeakingtoolv2(pData[i].replies)
-                            console.log("(v2) Test "+(i+1)+" done")           
+                            var senten = (pData[i].com).match(/\(?[^\.\?\!]+[\.!\?]\)?/g);
+                            if (senten == null){senten = []; senten[0] = pData[i].com;}
+                            console.log("(v1) Test "+(i+1)+ "start")
+                            console.log("(v1) Test "+(i+1)+" precheck :", senten)
+                            for (var r = 0; r < senten.length; r += 1) {
+                                var words = (senten[r]).split(" ");
+                                    console.log("(v1) Test "+(i+1)+"."+(r+1)+" start")
+                                    console.log(" ---(v1) Test "+(i+1)+ "."+(r+1)+" - com :",senten[r])
+                                    console.log(" ---(v1) Test "+(i+1)+ "."+(r+1)+" - wordspermin ?:",wordspermin(words))
+                                    console.log(" ---(v1) Test "+(i+1)+ "."+(r+1)+" - sleep time:",(words.length/wordspermin(words))*60000)
+                                    console.log(" ---(v1) Test "+(i+1)+ "."+(r+1)+"- Word:",words.length)
+                                speaktool(senten[r],(i+1),(r+1))
+                                await sleep((words.length/wordspermin(words))*60000);
+                                console.log("(v1) Test "+(i+1)+"."+(r+1)+" done")
+                            }  
+                            console.log("(v1) Test "+(i+1)+ "done")
                         }
-                    }
-                
-                async function massSpeakingtoolv3(pData,i){
-                        var allVoices = window.speechSynthesis.getVoices();
-                        var tester = new SpeechSynthesisUtterance(); 
-                            tester.voice = allVoices[5]
-                            tester.rate = 1.3
-                            tester.pitch = 1
-                            tester.text = pData[i].com;
-                            tester.onstart = function(e) {
-                                //var words = (pData[i].com).split(" ");
-                                //await sleep((words.length/wordspermin(words))*60000); 
-                                
-                                console.log("(v3) Test "+(i+1)+ " start")
-                                //console.log("(v3) Test "+(i+1)+" precheck :", pData[i].com)
-                            
-                                var words = (pData[i].com).split(" ");
-                                console.log("(v3) Test "+(i+1)+"."+pData[i].level+" start")
-                                console.log(" ---(v3) Test "+(i+1)+"."+pData[i].level+" - com :",pData[i].com)
-                                //console.log(" ---(v3) Test "+(i+1)+ " - wordspermin ?:",wordspermin(words))
-                                //console.log(" ---(v3) Test "+(i+1)+ " - sleep time:",(words.length/wordspermin(words))*60000)
-                                console.log(" ---(v3) Test "+(i+1)+"."+pData[i].level+" - Word:",words.length)
-
-                            };
-                            tester.onend = function(e) {
-                                //massSpeakingtoolv3(pData[i].replies,(0))
-                                if (!(pData.length == (i + 1))){massSpeakingtoolv3(pData,(i+1))}
-                                console.log(" --- (v3)Test "+(i + 1)+"."+pData[i].level+" Finished in " + (event.elapsedTime) + " millseconds.");
-                                console.log("(v3) Test "+(i+1)+"."+pData[i].level+" done")  
-                            };   
-
-                        //console.log("Before") 
-                        window.speechSynthesis.cancel();
-                        window.speechSynthesis.speak(tester); 
-                        //console.log("After")   
-                    }
-                async function massSpeakingtoolv4(pData,i,oldpData,oldi){
-    
-    //if(pData[i] == null){console.log(" --- (v"+ver+")    >THAT FUCKING ERROR");}
-    if(pData.length == i ){
-            //notes
-            //console.log(" --- (v"+ver+") Test -."+(i)+" inside if GUARD");
-            // self id
-            //console.log(" --- (v"+ver+")    >Self check");
-            //console.log(" --- (v"+ver+")        check : "+ pData[i]);
-            //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
-            //notes
-            //console.log(" --- (v"+ver+")        Test -."+(i)+" inside if GUARD");
-            // tool id
-            //console.log(" --- (v"+ver+")    >Tool id check");
-            //console.log(" --- (v"+ver+")        check : "+ oldpData);
-            //console.log(" --- (v"+ver+")        check : "+ oldi);
-            //notes
-            //console.log(" --- (v"+ver+")        Test -."+(i)+" inside if GUARD");
-            // tool out id
-            //console.log(" --- (v"+ver+")    >Tool out self check");
-            //console.log(" --- (v"+ver+")        check : "+ oldpData[0]);
-            // tool id
-            //console.log(" --- (v"+ver+")    >Tool out seif id check");
-            //console.log(" --- (v"+ver+")        check : "+ oldpData[0].olddata);
-            //console.log(" --- (v"+ver+")        check : "+ oldpData[0].oldi);
-            //notes
-            //console.log(" --- (v"+ver+")        Test -."+(i)+" inside if GUARD");
-            // Con tag
-            //console.log(" --- (v"+ver+")    >Con tag check");
-            //console.log(" --- (v"+ver+")        check : ",oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi); 
-            await massSpeakingtoolv4(oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
-    }else{
-        //console.log("(v"+ver+") Test -."+(i)+" precheck :", pData[i].com)
-        var allVoices = window.speechSynthesis.getVoices();
-        var tester = new SpeechSynthesisUtterance();
-        window.speechSynthesis.resume()
-            tester.voice = allVoices[5]
-            tester.rate = 1.3
-            tester.pitch = 1
-            //if(pData[i] == null){}
-            tester.text = pData[i].com;
-        
-            
-
-            var fakeonstart = async function(e) {
-                
-                //window.speechSynthesis.pause()
-                
-                //await sleep (1000)
-                console.log(" ----- pretend stop WORKKKKKK")
-                
-                //var words = (pData[i].com).split(" ");
-                //await sleep((words.length/wordspermin(words))*60000); 
-                //console.log("(v"+ver+") Test "+(i+1)+ " start")
-                var words = (pData[i].com).split(" ");
-                console.log(" ----- pretend Speak",pData[i].com)
-                //console.log("(v"+ver+") Test "+pData[i].level+"."+(i)+" start")
-                //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" - com :",pData[i].com)
-                //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" - Word:",words.length)
-            } 
-            //tester.onstart = fakeonstart()
-        
-            tester.onstart = async function(e) { await fakeonstart() }
-              
-            var fakeonend = async function(e) {    
-                //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" in end");
-
-                if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
-                    pData[i].replies[0].oldi = i
-                    pData[i].replies[0].olddata = pData
-                    //note
-                    //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 1");
-                    // self id
-                    //console.log(" --- (v"+ver+")    >Self id check");
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
-                    //notes
-                    //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 1");
-                    // kids id
-                    //console.log(" --- (v"+ver+")    >Kid id check");
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].replies[0].oldi);
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].replies[0].olddata);
-                    //notes
-                    //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 1");
-                    // tool id
-                    //console.log(" --- (v"+ver+")    >Tool id check");
-                    //console.log(" --- (v"+ver+")        check : "+ oldpData);
-                    //console.log(" --- (v"+ver+")        check : "+ oldi); 
-
-                    // Con tag
-                    //console.log(" --- (v"+ver+")    >Con tag check");
-                    //console.log(" --- (v"+ver+")        check : ",pData[i].replies,0,pData,i); 
-
-                    await massSpeakingtoolv4(pData[i].replies,0,pData,i)
-
                 }
-                if((i+1)< pData.length){ //This is to step to the next replys (Steps Down)
-                    pData[i+1].oldi = pData[i].oldi
+                async function massSpeakingtoolv2(pData){
 
-                    if (pData[i].oldi != null){
-                        if (pData[i].oldi > pData[i].olddata.length){ 
-                                pData[i+1].oldi = oldi;
-                                pData[i].oldi = oldi;
+                            window.speechSynthesis.cancel();
+                            //speaktool("Searcher",0)
+                            //await sleep(600)
+
+                            for (var i = 0; i < pData.length; i += 1) {
+                                await sleep(20)
+                                console.log("(v2) Test "+(i+1)+ "start")
+                                console.log("(v2) Test "+(i+1)+" precheck :", pData.com)
+
+                                var words = (pData[i].com).split(" ");
+                                console.log("(v2) Test "+(i+1)+" start")
+                                console.log(" ---(v2) Test "+(i+1)+ " - com :",pData[i].com)
+                                console.log(" ---(v2) Test "+(i+1)+ " - wordspermin ?:",wordspermin(words))
+                                console.log(" ---(v2) Test "+(i+1)+ " - sleep time:",(words.length/wordspermin(words))*60000)
+                                console.log(" ---(v2) Test "+(i+1)+ " - Word:",words.length)
+
+                                speaktool(pData[i].com,(i+1)),
+
+                                await sleep((words.length/wordspermin(words))*60000);
+                                massSpeakingtoolv2(pData[i].replies)
+                                console.log("(v2) Test "+(i+1)+" done")           
                             }
                     }
+                async function massSpeakingtoolv3(pData,i){
+                            var allVoices = window.speechSynthesis.getVoices();
+                            var tester = new SpeechSynthesisUtterance(); 
+                                tester.voice = allVoices[5]
+                                tester.rate = 1.3
+                                tester.pitch = 1
+                                tester.text = pData[i].com;
+                                tester.onstart = function(e) {
+                                    //var words = (pData[i].com).split(" ");
+                                    //await sleep((words.length/wordspermin(words))*60000); 
 
-                    pData[i+1].olddata = pData[i].olddata
+                                    console.log("(v3) Test "+(i+1)+ " start")
+                                    //console.log("(v3) Test "+(i+1)+" precheck :", pData[i].com)
 
-                    //notes
-                    //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 2");
-                    // self id
-                    //console.log(" --- (v"+ver+")    >Self id check");
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
-                    //notes
-                    //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 2");
-                    // Down id
-                    //console.log(" --- (v"+ver+")    >Next Down id check");
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i+1].olddata);
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i+1].oldi);
-                    //notes
-                    //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 2");
-                    // tool id
-                    //console.log(" --- (v"+ver+")    >Tool id check");
-                    //console.log(" --- (v"+ver+")        check : "+ oldpData);
-                    //console.log(" --- (v"+ver+")        check : "+ oldi); 
+                                    var words = (pData[i].com).split(" ");
+                                    console.log("(v3) Test "+(i+1)+"."+pData[i].level+" start")
+                                    console.log(" ---(v3) Test "+(i+1)+"."+pData[i].level+" - com :",pData[i].com)
+                                    //console.log(" ---(v3) Test "+(i+1)+ " - wordspermin ?:",wordspermin(words))
+                                    //console.log(" ---(v3) Test "+(i+1)+ " - sleep time:",(words.length/wordspermin(words))*60000)
+                                    console.log(" ---(v3) Test "+(i+1)+"."+pData[i].level+" - Word:",words.length)
 
-                    // Con tag
-                    //console.log(" --- (v"+ver+")    >Con tag check");
-                    //console.log(" --- (v"+ver+")        check : ",pData,(i+1),pData[i].olddata,pData[i].oldi);
-                    await massSpeakingtoolv4(pData,(i+1),pData[i].olddata,pData[i].oldi)
+                                };
+                                tester.onend = function(e) {
+                                    //massSpeakingtoolv3(pData[i].replies,(0))
+                                    if (!(pData.length == (i + 1))){massSpeakingtoolv3(pData,(i+1))}
+                                    console.log(" --- (v3)Test "+(i + 1)+"."+pData[i].level+" Finished in " + (event.elapsedTime) + " millseconds.");
+                                    console.log("(v3) Test "+(i+1)+"."+pData[i].level+" done")  
+                                };   
 
+                            //console.log("Before") 
+                            window.speechSynthesis.cancel();
+                            window.speechSynthesis.speak(tester); 
+                            //console.log("After")   
                 }
-                if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){ //This is to step to the nextlead (Steps Out)
-                    var kill = false
-                    if ((pData[i].olddata == null)&&(pData[i].oldi == null)){
-                            //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 3f --- DONE");
-                            //notes
-                            //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 3");
-                            // self id
-                            //console.log(" --- (v"+ver+")    >Self id check");
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);//wrong
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
-                            //notes
-                            //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 3");
-                            // Outs id
-                            //console.log(" --- (v"+ver+")    >Out id check");
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata[oldi].olddata);
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata[oldi].oldi);
-                            //notes
-                            //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 3");
-                            // tool id
-                            //console.log(" --- (v"+ver+")    >Tool id check");
-                            //console.log(" --- (v"+ver+")        check : "+ oldpData);
-                            //console.log(" --- (v"+ver+")        check : "+ oldi); 
+                async function massSpeakingtoolv4(pData,i,oldpData,oldi){
 
-                    }else{
-                            pData[i].olddata = oldpData
-                            pData[i].oldi = oldi
-                            //notes
-                            //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 3");
-                            // self id
-                            //console.log(" --- (v"+ver+")    >Self id check");
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);//wrong
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+                        //if(pData[i] == null){console.log(" --- (v"+ver+")    >THAT FUCKING ERROR");}
+                        if(pData.length == i ){
+                                //notes
+                                //console.log(" --- (v"+ver+") Test -."+(i)+" inside if GUARD");
+                                // self id
+                                //console.log(" --- (v"+ver+")    >Self check");
+                                //console.log(" --- (v"+ver+")        check : "+ pData[i]);
+                                //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+                                //notes
+                                //console.log(" --- (v"+ver+")        Test -."+(i)+" inside if GUARD");
+                                // tool id
+                                //console.log(" --- (v"+ver+")    >Tool id check");
+                                //console.log(" --- (v"+ver+")        check : "+ oldpData);
+                                //console.log(" --- (v"+ver+")        check : "+ oldi);
+                                //notes
+                                //console.log(" --- (v"+ver+")        Test -."+(i)+" inside if GUARD");
+                                // tool out id
+                                //console.log(" --- (v"+ver+")    >Tool out self check");
+                                //console.log(" --- (v"+ver+")        check : "+ oldpData[0]);
+                                // tool id
+                                //console.log(" --- (v"+ver+")    >Tool out seif id check");
+                                //console.log(" --- (v"+ver+")        check : "+ oldpData[0].olddata);
+                                //console.log(" --- (v"+ver+")        check : "+ oldpData[0].oldi);
+                                //notes
+                                //console.log(" --- (v"+ver+")        Test -."+(i)+" inside if GUARD");
+                                // Con tag
+                                //console.log(" --- (v"+ver+")    >Con tag check");
+                                //console.log(" --- (v"+ver+")        check : ",oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi); 
+                                await massSpeakingtoolv4(oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
+                        }else{
+                            //console.log("(v"+ver+") Test -."+(i)+" precheck :", pData[i].com)
+                            var allVoices = window.speechSynthesis.getVoices();
+                            var tester = new SpeechSynthesisUtterance();
+                            window.speechSynthesis.resume()
+                                tester.voice = allVoices[5]
+                                tester.rate = 1.3
+                                tester.pitch = 1
+                                //if(pData[i] == null){}
+                                tester.text = pData[i].com;
 
-                            //notes
-                            //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 3");
-                            // Outs id
-                            //console.log(" --- (v"+ver+")    >Out id check");
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata[oldi].olddata);
-                            //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata[oldi].oldi);
-                            //notes
-                            //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 3");
-                            // tool id
-                            //console.log(" --- (v"+ver+")    >Tool id check");
-                            //console.log(" --- (v"+ver+")        check : "+ oldpData);
-                            //console.log(" --- (v"+ver+")        check : "+ oldi); 
 
-                            // Con tag
-                            //console.log(" --- (v"+ver+")    >Con tag check");
-                            //console.log(" --- (v"+ver+")        check : ",oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi)); 
 
-                            await massSpeakingtoolv4(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi)) 
-                    }
-                }else{
-                    //notes
-                    //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 4 --- finish");
-                    // self id
-                    //console.log(" --- (v"+ver+")    >Self id check");
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);//wrong
-                    //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+                                var fakeonstart = async function(e) {
 
-                    //notes
-                    //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 4");
-                    //notes
-                    //console.log(" --- (v"+ver+")        Test com :", pData[i].com);
-                    // tool id
-                    //console.log(" --- (v"+ver+")    >Tool id check");
-                    //console.log(" --- (v"+ver+")        check : "+ oldpData);
-                    //console.log(" --- (v"+ver+")        check : "+ oldi); 
+                                    //window.speechSynthesis.pause()
 
-                }
-                //console.log("(v"+ver+") Test "+pData[i].level+"."+(i)+" done") 
-                //console.log("(v"+ver+") Test com:"+pData[i].com) 
-            };
-            //tester.onend = fakeonend()
+                                    //await sleep (1000)
+                                    console.log(" ----- pretend stop WORKKKKKK")
 
-            tester.onend = async function(e) { await fakeonend() }
-        
-            pData[i].used = true
-        
-            console.log("Before")
-        
-            window.speechSynthesis.speak(tester);
-            
-        
-            //console.log("Before") 
-            //window.speechSynthesis.cancel();
-            //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
-            //if (pData[i].used == false){
-            //    console.log(" ----- pretend Speak")
-            //    pData[i].used = true
-            //}
-            //console.log(" --- fakeonend()")
-            //fakeonend()
-            //console.log("After")   
-        }
-    }      
+                                    //var words = (pData[i].com).split(" ");
+                                    //await sleep((words.length/wordspermin(words))*60000); 
+                                    //console.log("(v"+ver+") Test "+(i+1)+ " start")
+                                    var words = (pData[i].com).split(" ");
+                                    console.log(" ----- pretend Speak",pData[i].com)
+                                    //console.log("(v"+ver+") Test "+pData[i].level+"."+(i)+" start")
+                                    //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" - com :",pData[i].com)
+                                    //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" - Word:",words.length)
+                                } 
+                                //tester.onstart = fakeonstart()
 
+                                tester.onstart = async function(e) { await fakeonstart() }
+
+                                var fakeonend = async function(e) {    
+                                    //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" in end");
+
+                                    if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
+                                        pData[i].replies[0].oldi = i
+                                        pData[i].replies[0].olddata = pData
+                                        //note
+                                        //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 1");
+                                        // self id
+                                        //console.log(" --- (v"+ver+")    >Self id check");
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+                                        //notes
+                                        //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 1");
+                                        // kids id
+                                        //console.log(" --- (v"+ver+")    >Kid id check");
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].replies[0].oldi);
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].replies[0].olddata);
+                                        //notes
+                                        //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 1");
+                                        // tool id
+                                        //console.log(" --- (v"+ver+")    >Tool id check");
+                                        //console.log(" --- (v"+ver+")        check : "+ oldpData);
+                                        //console.log(" --- (v"+ver+")        check : "+ oldi); 
+
+                                        // Con tag
+                                        //console.log(" --- (v"+ver+")    >Con tag check");
+                                        //console.log(" --- (v"+ver+")        check : ",pData[i].replies,0,pData,i); 
+
+                                        await massSpeakingtoolv4(pData[i].replies,0,pData,i)
+
+                                    }
+                                    if((i+1)< pData.length){ //This is to step to the next replys (Steps Down)
+                                        pData[i+1].oldi = pData[i].oldi
+
+                                        if (pData[i].oldi != null){
+                                            if (pData[i].oldi > pData[i].olddata.length){ 
+                                                    pData[i+1].oldi = oldi;
+                                                    pData[i].oldi = oldi;
+                                                }
+                                        }
+
+                                        pData[i+1].olddata = pData[i].olddata
+
+                                        //notes
+                                        //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 2");
+                                        // self id
+                                        //console.log(" --- (v"+ver+")    >Self id check");
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+                                        //notes
+                                        //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 2");
+                                        // Down id
+                                        //console.log(" --- (v"+ver+")    >Next Down id check");
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i+1].olddata);
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i+1].oldi);
+                                        //notes
+                                        //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 2");
+                                        // tool id
+                                        //console.log(" --- (v"+ver+")    >Tool id check");
+                                        //console.log(" --- (v"+ver+")        check : "+ oldpData);
+                                        //console.log(" --- (v"+ver+")        check : "+ oldi); 
+
+                                        // Con tag
+                                        //console.log(" --- (v"+ver+")    >Con tag check");
+                                        //console.log(" --- (v"+ver+")        check : ",pData,(i+1),pData[i].olddata,pData[i].oldi);
+                                        await massSpeakingtoolv4(pData,(i+1),pData[i].olddata,pData[i].oldi)
+
+                                    }
+                                    if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){ //This is to step to the nextlead (Steps Out)
+                                        var kill = false
+                                        if ((pData[i].olddata == null)&&(pData[i].oldi == null)){
+                                                //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 3f --- DONE");
+                                                //notes
+                                                //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 3");
+                                                // self id
+                                                //console.log(" --- (v"+ver+")    >Self id check");
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);//wrong
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+                                                //notes
+                                                //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 3");
+                                                // Outs id
+                                                //console.log(" --- (v"+ver+")    >Out id check");
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata[oldi].olddata);
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata[oldi].oldi);
+                                                //notes
+                                                //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 3");
+                                                // tool id
+                                                //console.log(" --- (v"+ver+")    >Tool id check");
+                                                //console.log(" --- (v"+ver+")        check : "+ oldpData);
+                                                //console.log(" --- (v"+ver+")        check : "+ oldi); 
+
+                                        }else{
+                                                pData[i].olddata = oldpData
+                                                pData[i].oldi = oldi
+                                                //notes
+                                                //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 3");
+                                                // self id
+                                                //console.log(" --- (v"+ver+")    >Self id check");
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);//wrong
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+
+                                                //notes
+                                                //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 3");
+                                                // Outs id
+                                                //console.log(" --- (v"+ver+")    >Out id check");
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata[oldi].olddata);
+                                                //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata[oldi].oldi);
+                                                //notes
+                                                //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 3");
+                                                // tool id
+                                                //console.log(" --- (v"+ver+")    >Tool id check");
+                                                //console.log(" --- (v"+ver+")        check : "+ oldpData);
+                                                //console.log(" --- (v"+ver+")        check : "+ oldi); 
+
+                                                // Con tag
+                                                //console.log(" --- (v"+ver+")    >Con tag check");
+                                                //console.log(" --- (v"+ver+")        check : ",oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi)); 
+
+                                                await massSpeakingtoolv4(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi)) 
+                                        }
+                                    }else{
+                                        //notes
+                                        //console.log(" --- (v"+ver+") Test "+pData[i].level+"."+(i)+" inside if 4 --- finish");
+                                        // self id
+                                        //console.log(" --- (v"+ver+")    >Self id check");
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].olddata);
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].oldi);//wrong
+                                        //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+
+                                        //notes
+                                        //console.log(" --- (v"+ver+")        Test "+pData[i].level+"."+(i)+" inside if 4");
+                                        //notes
+                                        //console.log(" --- (v"+ver+")        Test com :", pData[i].com);
+                                        // tool id
+                                        //console.log(" --- (v"+ver+")    >Tool id check");
+                                        //console.log(" --- (v"+ver+")        check : "+ oldpData);
+                                        //console.log(" --- (v"+ver+")        check : "+ oldi); 
+
+                                    }
+                                    //console.log("(v"+ver+") Test "+pData[i].level+"."+(i)+" done") 
+                                    //console.log("(v"+ver+") Test com:"+pData[i].com) 
+                                };
+                                //tester.onend = fakeonend()
+
+                                tester.onend = async function(e) { await fakeonend() }
+
+                                pData[i].used = true
+
+                                console.log("Before")
+
+                                window.speechSynthesis.speak(tester);
+
+
+                                //console.log("Before") 
+                                //window.speechSynthesis.cancel();
+                                //console.log(" --- (v"+ver+")        check : "+ pData[i].used);
+                                //if (pData[i].used == false){
+                                //    console.log(" ----- pretend Speak")
+                                //    pData[i].used = true
+                                //}
+                                //console.log(" --- fakeonend()")
+                                //fakeonend()
+                                //console.log("After")   
+                            }
+                        }      
                 async function massSpeakingtoolv5(pData,i,oldpData,oldi){
                     if(pData.length == i ){
                             await massSpeakingtoolv5(oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
@@ -1465,73 +1551,132 @@ var mainFunction = function(){
                             fakeonend()
                             //window.speechSynthesis.speak(tester);
 
-}
-                }    
-            
-            
-                //main start  
-                async function massSpeakingtoolv8(tester,pData,i,oldpData,oldi){
-                //Start of massSpeakingtoolv8
+            }
+                    }    
+                async function massSpeakingtoolv6(pData,i,oldpData,oldi){
+
                     var deferred = $.Deferred();
-                    var timeoutResumeInfinity
-                    window.speechSynthesis.cancel();
+
                     if(pData.length == i ){
-                        var promiseTEMP =  massSpeakingtoolv8(tester,oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
-                        promiseTEMP.then(function(result) {
-                            deferred.resolve(i);
-                        }) 
-                    }
-                    else{
-                        //console.log(tester,pData,i,oldpData,oldi)
+                        var promise = massSpeakingtoolv6(oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
+                            promise.then(function(result) {
+                                console.log("Result: " + result);
+                                deferred.resolve(i);
+                        });    
+                    }else{
                         var allVoices = window.speechSynthesis.getVoices();
-                        var BotVoicer = new SpeechSynthesisUtterance();
-                        BotVoicer.voice = allVoices[5]
-                        BotVoicer.rate = 1.5
-                        BotVoicer.pitch = 1
-                        BotVoicer.text = textfixer(pData[i].com)
-                        //fakeonstart
-                        var fakeonstart = async function(e) {
-                            resumeInfinity(pData[i].com);
-                            //console.log(" ----- pretend Speak start time ")
-                            //console.log(" ----- pretend Speak start time ", e)
-                            //video manger test
-                            pageEdittest(pData,i)
-                             
-                        }
-                        //fakeonend
-                        var fakeonend = function(e) {
-                            //inside onend (top)
-
-                            //Resets Speaker
-                            clearTimeout(timeoutResumeInfinity);
-                            window.speechSynthesis.cancel();
-                            
-                            Steps_in_helper(tester,pData,i,oldpData,oldi)
-                            //console.log(" ----- pretend Speak end time",("Object: " + e));
-                            //console.log(" ----- pretend Speak end time",("Step: " + i));
-
-                            //This is to step in to a level of replys (Steps In)
-                            function Steps_in_helper(tester,pData,i,oldpData,oldi){
-                            //inside Steps In (top)   
-                                if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
-                                pData[i].replies[0].oldi = i
-                                pData[i].replies[0].olddata = pData
-                                //console.log(" ----- promiseTEMP type 1 - (Steps In)");
-                                var promiseTEMP = massSpeakingtoolv8(tester,pData[i].replies,0,pData,i)
-                                promiseTEMP.then(function(result) { 
-                                    //This is to step to the next replys (Steps Down)
-                                    Steps_do_helper(tester,pData,i,oldpData,oldi)
-                                })
-                                }else{
-                                    //This is to step to the next replys (Steps Down)
-                                    Steps_do_helper(tester,pData,i,oldpData,oldi)  
-                                }
-                            //inside Steps In (bottom)
+                        var tester = new SpeechSynthesisUtterance();
+                        window.speechSynthesis.resume()
+                            tester.voice = allVoices[5]
+                            tester.rate = 1.3
+                            tester.pitch = 1
+                            tester.text = pData[i].com;
+                            var fakeonstart = async function(e) {
+                                console.log(" ----- pretend Speak start time",pData[i].com)
                             }
+                            var fakeonend = async function(e) {    
+                                await sleep(800)
+                                console.log(" ----- pretend Speak end time")
 
-                            //This is to step to the next replys (Steps Down)
-                            function Steps_do_helper(tester,pData,i,oldpData,oldi){
-                            //inside Steps Down (top)
+                                //This is to step in to a level of replys (Steps In)
+                                if (pData[i].replies.length != 0) {//This is to step in to a level of replys (Steps In)
+                                    pData[i].replies[0].oldi = i
+                                    pData[i].replies[0].olddata = pData
+
+                                    var promise =  massSpeakingtoolv5(pData[i].replies,0,pData,i)
+
+                                    promise.then(function(result) {
+                                        console.log("Result: " + result);
+                                        deferred.resolve(i);                          
+                                    })
+                                }
+
+                                //This is to step to the next replys (Steps Down)
+                                if((i+1)< pData.length){//This is to step to the next replys (Steps Down)
+                                    pData[i+1].oldi = pData[i].oldi
+
+                                    if (pData[i].oldi != null){
+                                        if (pData[i].oldi > pData[i].olddata.length){ 
+                                                pData[i+1].oldi = oldi;
+                                                pData[i].oldi = oldi;
+                                        }
+                                    }
+                                    pData[i+1].olddata = pData[i].olddata
+                                    var promise =  massSpeakingtoolv5(pData,(i+1),pData[i].olddata,pData[i].oldi)
+
+                                    promise.then(function(result) {
+                                        console.log("Result: " + result);
+                                        deferred.resolve(i);                          
+                                    })
+
+                                }
+
+                                //This is to step to the nextlead (Steps Out)
+                                if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){//This is to step to the nextlead (Steps Out)
+                                    var kill = false
+                                    if ((pData[i].olddata == null)&&(pData[i].oldi == null)){
+
+                                    }else{
+                                            pData[i].olddata = oldpData
+                                            pData[i].oldi = oldi
+                                        var promise =  massSpeakingtoolv5(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))
+
+                                        promise.then(function(result) {
+                                            console.log("Result: " + result);
+                                            deferred.resolve(i);                          
+                                        })
+
+                                    }
+                                }
+
+                                //resolve
+                                deferred.resolve(i);
+                            };
+
+                            tester.onstart = async function(e) { await fakeonend() }
+                            tester.onend = async function(e) { await fakeonend() }
+
+                            pData[i].used = true
+                            //console.log("Before")
+                            await fakeonstart()
+                            console.log(" ----- pretend Speak")
+                            await fakeonend()
+                            //window.speechSynthesis.speak(tester);
+
+                        }
+                    return deferred.promise();
+                    //end
+                    }   
+                let massSpeakingtoolv7 = new Promise(async function(pData,i,oldpData,oldi,resolve, reject) {
+                    //async function massSpeakingtoolv7(pData,i,oldpData,oldi){
+                    if(pData.length == i ){
+                            let result = await massSpeakingtoolv7(oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
+                            console.log(" --- ",result)
+                            console.log(' --- next step')
+                            resolve()
+                    }else{
+                            var allVoices = window.speechSynthesis.getVoices();
+                        var tester = new SpeechSynthesisUtterance();
+                        window.speechSynthesis.resume()
+                            tester.voice = allVoices[5]
+                            tester.rate = 1.3
+                            tester.pitch = 1
+                            tester.text = pData[i].com;
+                            var fakeonstart = async function(e) {
+                                console.log(" ----- pretend Speak start time",pData[i].com)
+                            }
+                            var fakeonend = async function(e) {    
+                                await sleep(800)
+                                console.log(" ----- pretend Speak end time")
+
+                                if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
+                                    pData[i].replies[0].oldi = i
+                                    pData[i].replies[0].olddata = pData
+
+                                    let result = await massSpeakingtoolv7(pData[i].replies,0,pData,i)
+                                    console.log(" --- ",result)
+                                    console.log(' --- next step')
+                                }
                                 if((i+1)< pData.length){ //This is to step to the next replys (Steps Down)
                                     pData[i+1].oldi = pData[i].oldi
 
@@ -1542,497 +1687,483 @@ var mainFunction = function(){
                                         }
                                     }
                                     pData[i+1].olddata = pData[i].olddata
-                                    var promiseTEMP =  massSpeakingtoolv8(tester,pData,(i+1),pData[i].olddata,pData[i].oldi)
-                                    promiseTEMP.then(function(result) { 
-                                        //This is to step to the next lead (Steps Out)
-                                        Steps_ou_helper(tester,pData,i,oldpData,oldi)
-                                    })
-                                }else{
-                                    //This is to step to the next lead (Steps Out)
-                                    Steps_ou_helper(tester,pData,i,oldpData,oldi) 
-                                } 
-                            //inside Steps Down (bottom)
-                            }
+                                    let result = await massSpeakingtoolv7(pData,(i+1),pData[i].olddata,pData[i].oldi)
+                                    console.log(" --- ",result)
+                                    console.log(' --- next step')
 
-                            //This is to step to the next lead (Steps Out)
-                            function Steps_ou_helper(tester,pData,i,oldpData,oldi){
-                            //inside Steps out (top)
-                                pData[i].used = true
+                                }
                                 if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){ //This is to step to the nextlead (Steps Out)
-                                    pData[i].olddata = oldpData
-                                    pData[i].oldi = oldi
-                                    var promiseTEMP =  massSpeakingtoolv8(tester,oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))
-                                    promiseTEMP.then(function(result) { 
-                                        //deferred.resolve(i);
-                                        
-                                        deferred.resolve(i);
-                                    })
-                                    // await massSpeakingtoolv5(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))  
+                                    var kill = false
+                                    if ((pData[i].olddata == null)&&(pData[i].oldi == null)){
+
+                                    }else{
+                                            pData[i].olddata = oldpData
+                                            pData[i].oldi = oldi
+                                        let result = await massSpeakingtoolv7(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))
+                                        console.log(" --- ",result)
+                                        console.log(' --- next step')
+                                    }
                                 }else{
-                                    
-                                    deferred.resolve(i);
-                                }      
-                            //inside Steps out (bottom)    
-                            }
 
-                            
+                                }
+                                resolve()
+                            };
 
-                        //inside onend (bottom)
-                        }
-                        //real time setters
-                        BotVoicer.onstart = function(e) {fakeonstart(e)}
-                        BotVoicer.onend = function(e) {fakeonend(e)}
-                        BotVoicer.onerror = function(e){console.log(".speak(BotVoicer) - onerror")}
-                        BotVoicer.onpause = function(e){console.log(".speak(BotVoicer) - onpause")}
-                        BotVoicer.onresume = function(e){console.log(".speak(BotVoicer) - onresume")}
-                        BotVoicer.onmark = function(e){console.log(".speak(BotVoicer) - onmark")}
-                        BotVoicer.onboundary = function(e){console.log(".speak(BotVoicer) - onboundary")}
-                        //sim for testing
-                        //fakeonstart()
-                       
-                        
-                        
-                        
-                        
-                        
-                        window.speechSynthesis.cancel();
-                        if (!pData[i].used){
+                            tester.onstart = async function(e) { await fakeonend() }
+                            tester.onend = async function(e) { await fakeonend() }
+
                             pData[i].used = true
+                            //console.log("Before")
+                            fakeonstart()
+                            console.log(" ----- pretend Speak")
+                            fakeonend()
+                            //window.speechSynthesis.speak(tester);
+
+                        }
+                    })
+                
+                //main manager (1) version 8 - works
+                async function massSpeakingtoolv8(tester,pData,i,oldpData,oldi){
+                    //Start of massSpeakingtoolv8
+                        var deferred = $.Deferred();
+                        var timeoutResumeInfinity
+                        window.speechSynthesis.cancel();
+                        if(pData.length == i ){
+                            var promiseTEMP =  massSpeakingtoolv8(tester,oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
+                            promiseTEMP.then(function(result) {
+                                deferred.resolve(i);
+                            }) 
+                        }
+                        else{
+                            //console.log(tester,pData,i,oldpData,oldi)
+                            var allVoices = window.speechSynthesis.getVoices();
+                            var BotVoicer = new SpeechSynthesisUtterance();
+                            BotVoicer.voice = allVoices[5]
+                            BotVoicer.rate = 1.2
+                            BotVoicer.pitch = 1
+                            BotVoicer.text = textfixer(pData[i].com)
+                            //fakeonstart
+                            var fakeonstart = async function(e) {
+                                resumeInfinity(pData[i].com);
+                                //console.log(" ----- pretend Speak start time ")
+                                //console.log(" ----- pretend Speak start time ", e)
+                                //video manger test
+                                pageEdittest(pData,i)
+
+                            }
+                            //fakeonend
+                            var fakeonend = function(e) {
+                                //inside onend (top)
+
+                                //Resets Speaker
+                                clearTimeout(timeoutResumeInfinity);
+                                window.speechSynthesis.cancel();
+
+                                Steps_in_helper(tester,pData,i,oldpData,oldi)
+                                //console.log(" ----- pretend Speak end time",("Object: " + e));
+                                //console.log(" ----- pretend Speak end time",("Step: " + i));
+
+                                //This is to step in to a level of replys (Steps In)
+                                function Steps_in_helper(tester,pData,i,oldpData,oldi){
+                                //inside Steps In (top)   
+                                    if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
+                                    pData[i].replies[0].oldi = i
+                                    pData[i].replies[0].olddata = pData
+                                    //console.log(" ----- promiseTEMP type 1 - (Steps In)");
+                                    var promiseTEMP = massSpeakingtoolv8(tester,pData[i].replies,0,pData,i)
+                                    promiseTEMP.then(function(result) { 
+                                        //This is to step to the next replys (Steps Down)
+                                        Steps_do_helper(tester,pData,i,oldpData,oldi)
+                                    })
+                                    }else{
+                                        //This is to step to the next replys (Steps Down)
+                                        Steps_do_helper(tester,pData,i,oldpData,oldi)  
+                                    }
+                                //inside Steps In (bottom)
+                                }
+
+                                //This is to step to the next replys (Steps Down)
+                                function Steps_do_helper(tester,pData,i,oldpData,oldi){
+                                //inside Steps Down (top)
+                                    if((i+1)< pData.length){ //This is to step to the next replys (Steps Down)
+                                        pData[i+1].oldi = pData[i].oldi
+
+                                        if (pData[i].oldi != null){
+                                            if (pData[i].oldi > pData[i].olddata.length){ 
+                                                    pData[i+1].oldi = oldi;
+                                                    pData[i].oldi = oldi;
+                                            }
+                                        }
+                                        pData[i+1].olddata = pData[i].olddata
+                                        var promiseTEMP =  massSpeakingtoolv8(tester,pData,(i+1),pData[i].olddata,pData[i].oldi)
+                                        promiseTEMP.then(function(result) { 
+                                            //This is to step to the next lead (Steps Out)
+                                            Steps_ou_helper(tester,pData,i,oldpData,oldi)
+                                        })
+                                    }else{
+                                        //This is to step to the next lead (Steps Out)
+                                        Steps_ou_helper(tester,pData,i,oldpData,oldi) 
+                                    } 
+                                //inside Steps Down (bottom)
+                                }
+
+                                //This is to step to the next lead (Steps Out)
+                                function Steps_ou_helper(tester,pData,i,oldpData,oldi){
+                                //inside Steps out (top)
+                                    pData[i].used = true
+                                    if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){ //This is to step to the nextlead (Steps Out)
+                                        pData[i].olddata = oldpData
+                                        pData[i].oldi = oldi
+                                        var promiseTEMP =  massSpeakingtoolv8(tester,oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))
+                                        promiseTEMP.then(function(result) { 
+                                            //deferred.resolve(i);
+
+                                            deferred.resolve(i);
+                                        })
+                                        // await massSpeakingtoolv5(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))  
+                                    }else{
+
+                                        deferred.resolve(i);
+                                    }      
+                                //inside Steps out (bottom)    
+                                }
+
+
+
+                            //inside onend (bottom)
+                            }
+                            //real time setters
+                            BotVoicer.onstart = function(e) {fakeonstart(e)}
+                            BotVoicer.onend = function(e) {fakeonend(e)}
+                            BotVoicer.onerror = function(e){console.log(".speak(BotVoicer) - onerror")}
+                            BotVoicer.onpause = function(e){console.log(".speak(BotVoicer) - onpause")}
+                            BotVoicer.onresume = function(e){console.log(".speak(BotVoicer) - onresume")}
+                            BotVoicer.onmark = function(e){console.log(".speak(BotVoicer) - onmark")}
+                            BotVoicer.onboundary = function(e){console.log(".speak(BotVoicer) - onboundary")}
+                            //sim for testing
+                            //fakeonstart()
+
+
+
+
+
+
                             window.speechSynthesis.cancel();
-                            window.speechSynthesis.speak(BotVoicer);
-                            console.log("window.speechSynthesis.speak(BotVoicer) - Com:", BotVoicer.text);
-                            console.log("Step: " + i);
+                            if (!pData[i].used){
+                                pData[i].used = true
+                                window.speechSynthesis.cancel();
+                                window.speechSynthesis.speak(BotVoicer);
+                                console.log("window.speechSynthesis.speak(BotVoicer) - Com:", BotVoicer.text);
+                                console.log("Step: " + i);
+                            }
+                            //window.speechSynthesis.speak(BotVoicer);
+                            //window.speechSynthesis.resume();
+                            //console.log("window.speechSynthesis.speak(BotVoicer) - Com:", textfixer(pData[i].com));
+                            //await sleep(1000)
+                            //fakeonend()
+                            //printing 
+                            //ending   
+                        }  
+
+                    //reture sub end    
+                    return deferred.promise();    
+                    //end of massSpeakingtoolv8
+                    }
+            
+                //main manager (2) version 9 - mission ready
+                async function massSpeakingtoolv9(tester,pData,i,oldpData,oldi){
+                    //Start of massSpeakingtoolv9
+                        var deferred = $.Deferred();
+                        var timeoutResumeInfinity
+                        window.speechSynthesis.cancel();
+                        if(pData.length == i ){
+                            var promiseTEMP =  massSpeakingtoolv9(tester,oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
+                            promiseTEMP.then(function(result) {
+                                deferred.resolve(i);
+                            }) 
                         }
-                        //window.speechSynthesis.speak(BotVoicer);
-                        //window.speechSynthesis.resume();
-                        //console.log("window.speechSynthesis.speak(BotVoicer) - Com:", textfixer(pData[i].com));
-                        //await sleep(1000)
-                        //fakeonend()
-                        //printing 
-                        //ending   
-                    }  
-                
-                //reture sub end    
-                return deferred.promise();    
-                //end of massSpeakingtoolv8
-                }
-        
-                
-                function resumeInfinity(text) {
-                    window.speechSynthesis.resume();
-                    
-                    //var wc = wordcount(text) 
-                    //if (wc <= 50)
-                    
-                    timeoutResumeInfinity = setTimeout(resumeInfinity, 3500);
-                }
-            
-                function strip(html){
-                   var doc = new DOMParser().parseFromString(html, 'text/html');
-                   return doc.body.textContent || "";
-                }
-            
-                function textfixer(text){
-                    var Rtext = text.match('link">.*</a>')
-                    if (Rtext != null){
-                        text = text.replace(Rtext,'link"></a>')
+                        else{
+                            var allVoices = window.speechSynthesis.getVoices();
+                            var BotVoicer = new SpeechSynthesisUtterance();
+                            BotVoicer.voice = allVoices[5]
+                            BotVoicer.rate = 1.2
+                            BotVoicer.pitch = 1
+                            BotVoicer.text = textfixer(pData[i].com)
+                            //fakeonstart
+                            var fakeonstart = async function(e) {
+                                resumeInfinity(pData[i].com);
+                                //video manger test
+                                pageEdittest(pData,i,oldpData,oldi)
+                            }
+                            //fakeonend
+                            var fakeonend = function(e) {
+                            //inside onend (top)
+                                
+                                //Resets Speaker
+                                clearTimeout(timeoutResumeInfinity);
+                                window.speechSynthesis.cancel();
+
+                                //This is to step in to a level of replys (Steps In)
+                                function Steps_in_helper(tester,pData,i,oldpData,oldi){
+                                //inside Steps In (top)   
+                                    if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
+                                    pData[i].replies[0].oldi = i
+                                    pData[i].replies[0].olddata = pData
+                                    //console.log(" ----- promiseTEMP type 1 - (Steps In)");
+                                    var promiseTEMP = massSpeakingtoolv9(tester,pData[i].replies,0,pData,i)
+                                    promiseTEMP.then(function(result) { 
+                                        //This is to step to the next replys (Steps Down)
+                                        Steps_do_helper(tester,pData,i,oldpData,oldi)
+                                    })
+                                    }else{
+                                        //This is to step to the next replys (Steps Down)
+                                        Steps_do_helper(tester,pData,i,oldpData,oldi)  
+                                    }
+                                //inside Steps In (bottom)
+                                }
+                                //This is to step to the next replys (Steps Down)
+                                function Steps_do_helper(tester,pData,i,oldpData,oldi){
+                                //inside Steps Down (top)
+                                    if((i+1)< pData.length){ //This is to step to the next replys (Steps Down)
+                                        pData[i+1].oldi = pData[i].oldi
+
+                                        if (pData[i].oldi != null){
+                                            if (pData[i].oldi > pData[i].olddata.length){ 
+                                                    pData[i+1].oldi = oldi;
+                                                    pData[i].oldi = oldi;
+                                            }
+                                        }
+                                        pData[i+1].olddata = pData[i].olddata
+                                        var promiseTEMP =  massSpeakingtoolv9(tester,pData,(i+1),pData[i].olddata,pData[i].oldi)
+                                        promiseTEMP.then(function(result) { 
+                                            //This is to step to the next lead (Steps Out)
+                                            Steps_ou_helper(tester,pData,i,oldpData,oldi)
+                                        })
+                                    }else{
+                                        //This is to step to the next lead (Steps Out)
+                                        Steps_ou_helper(tester,pData,i,oldpData,oldi) 
+                                    } 
+                                //inside Steps Down (bottom)
+                                }
+                                //This is to step to the next lead (Steps Out)
+                                function Steps_ou_helper(tester,pData,i,oldpData,oldi){
+                                //inside Steps out (top)
+                                    pData[i].used = true
+                                    if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){ //This is to step to the nextlead (Steps Out)
+                                        pData[i].olddata = oldpData
+                                        pData[i].oldi = oldi
+                                        var promiseTEMP =  massSpeakingtoolv9(tester,oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))
+                                        promiseTEMP.then(function(result) { 
+                                            //deferred.resolve(i);
+
+                                            deferred.resolve(i);
+                                        })
+                                        // await massSpeakingtoolv5(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))  
+                                    }else{
+
+                                        deferred.resolve(i);
+                                    }      
+                                //inside Steps out (bottom)    
+                                }
+                                
+                                Steps_in_helper(tester,pData,i,oldpData,oldi)// - This is to step in to a level of replys (Steps In)
+                                    
+                            //inside onend (bottom)
+                            }
+                            //real time setters
+                            BotVoicer.onstart = function(e) {fakeonstart(e)}
+                            BotVoicer.onend = function(e) {fakeonend(e)}
+                            BotVoicer.onerror = function(e){console.log(".speak(BotVoicer) - error")}
+                            BotVoicer.onpause = function(e){console.log(".speak(BotVoicer) - pause")}
+                            BotVoicer.onresume = function(e){console.log(".speak(BotVoicer) - resume")}
+                            BotVoicer.onmark = function(e){console.log(".speak(BotVoicer) - mark")}
+                            BotVoicer.onboundary = function(e){console.log(".speak(BotVoicer) - boundary")}
+                            window.speechSynthesis.cancel();
+                            if (!pData[i].used){
+                                pData[i].used = true
+                                window.speechSynthesis.cancel();
+                                window.speechSynthesis.speak(BotVoicer);
+                                //console.log("window.speechSynthesis.speak(BotVoicer) - Com:", BotVoicer.text);
+                                //console.log("Step: " + i);
+                            }  
+                        }  
+                    //reture sub end    
+                    return deferred.promise();    
+                    //end of massSpeakingtoolv8
                     }
-                    text = strip(text)
-                    text = text.replace(">",'Quote,: ')
-                    
-                    var badwords = ["faggot", "bar", "blah", "gay","faggots", "gays"];
-                    
-                    for (var i = 0; i < badwords.length; i++) {
-                        var pat = badwords[i].slice(0, -1).replace(/([a-z])/g, "$1[^a-z]*") + badwords[i].slice(-1);
-                        var rxp = new RegExp(pat, "ig");
-                        text = text.replace(rxp, " *BLEEP* ");
-                    }
-                    
-                    return text  
-                }
 
-                async function massSpeakingtoolv6(pData,i,oldpData,oldi){
-    
-    var deferred = $.Deferred();
-    
-    if(pData.length == i ){
-        var promise = massSpeakingtoolv6(oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
-            promise.then(function(result) {
-                console.log("Result: " + result);
-                deferred.resolve(i);
-        });    
-    }else{
-        var allVoices = window.speechSynthesis.getVoices();
-        var tester = new SpeechSynthesisUtterance();
-        window.speechSynthesis.resume()
-            tester.voice = allVoices[5]
-            tester.rate = 1.3
-            tester.pitch = 1
-            tester.text = pData[i].com;
-            var fakeonstart = async function(e) {
-                console.log(" ----- pretend Speak start time",pData[i].com)
-            }
-            var fakeonend = async function(e) {    
-                await sleep(800)
-                console.log(" ----- pretend Speak end time")
-                
-                //This is to step in to a level of replys (Steps In)
-                if (pData[i].replies.length != 0) {//This is to step in to a level of replys (Steps In)
-                    pData[i].replies[0].oldi = i
-                    pData[i].replies[0].olddata = pData
-                    
-                    var promise =  massSpeakingtoolv5(pData[i].replies,0,pData,i)
-                    
-                    promise.then(function(result) {
-                        console.log("Result: " + result);
-                        deferred.resolve(i);                          
-                    })
-                }
-                
-                //This is to step to the next replys (Steps Down)
-                if((i+1)< pData.length){//This is to step to the next replys (Steps Down)
-                    pData[i+1].oldi = pData[i].oldi
-
-                    if (pData[i].oldi != null){
-                        if (pData[i].oldi > pData[i].olddata.length){ 
-                                pData[i+1].oldi = oldi;
-                                pData[i].oldi = oldi;
-                        }
-                    }
-                    pData[i+1].olddata = pData[i].olddata
-                    var promise =  massSpeakingtoolv5(pData,(i+1),pData[i].olddata,pData[i].oldi)
-                    
-                    promise.then(function(result) {
-                        console.log("Result: " + result);
-                        deferred.resolve(i);                          
-                    })
-
-                }
-                
-                //This is to step to the nextlead (Steps Out)
-                if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){//This is to step to the nextlead (Steps Out)
-                    var kill = false
-                    if ((pData[i].olddata == null)&&(pData[i].oldi == null)){
-
-                    }else{
-                            pData[i].olddata = oldpData
-                            pData[i].oldi = oldi
-                        var promise =  massSpeakingtoolv5(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))
-                        
-                        promise.then(function(result) {
-                            console.log("Result: " + result);
-                            deferred.resolve(i);                          
-                        })
-                        
-                    }
-                }
-                
-                //resolve
-                deferred.resolve(i);
-            };
-            
-            tester.onstart = async function(e) { await fakeonend() }
-            tester.onend = async function(e) { await fakeonend() }
-        
-            pData[i].used = true
-            //console.log("Before")
-            await fakeonstart()
-            console.log(" ----- pretend Speak")
-            await fakeonend()
-            //window.speechSynthesis.speak(tester);
-              
-        }
-return deferred.promise();
-//end
-}      
-
-                let massSpeakingtoolv7 = new Promise(async function(pData,i,oldpData,oldi,resolve, reject) {
-//async function massSpeakingtoolv7(pData,i,oldpData,oldi){
-    if(pData.length == i ){
-            let result = await massSpeakingtoolv7(oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
-            console.log(" --- ",result)
-            console.log(' --- next step')
-            resolve()
-    }else{
-            var allVoices = window.speechSynthesis.getVoices();
-        var tester = new SpeechSynthesisUtterance();
-        window.speechSynthesis.resume()
-            tester.voice = allVoices[5]
-            tester.rate = 1.3
-            tester.pitch = 1
-            tester.text = pData[i].com;
-            var fakeonstart = async function(e) {
-                console.log(" ----- pretend Speak start time",pData[i].com)
-            }
-            var fakeonend = async function(e) {    
-                await sleep(800)
-                console.log(" ----- pretend Speak end time")
-
-                if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
-                    pData[i].replies[0].oldi = i
-                    pData[i].replies[0].olddata = pData
-                    
-                    let result = await massSpeakingtoolv7(pData[i].replies,0,pData,i)
-                    console.log(" --- ",result)
-                    console.log(' --- next step')
-                }
-                if((i+1)< pData.length){ //This is to step to the next replys (Steps Down)
-                    pData[i+1].oldi = pData[i].oldi
-
-                    if (pData[i].oldi != null){
-                        if (pData[i].oldi > pData[i].olddata.length){ 
-                                pData[i+1].oldi = oldi;
-                                pData[i].oldi = oldi;
-                        }
-                    }
-                    pData[i+1].olddata = pData[i].olddata
-                    let result = await massSpeakingtoolv7(pData,(i+1),pData[i].olddata,pData[i].oldi)
-                    console.log(" --- ",result)
-                    console.log(' --- next step')
-
-                }
-                if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){ //This is to step to the nextlead (Steps Out)
-                    var kill = false
-                    if ((pData[i].olddata == null)&&(pData[i].oldi == null)){
-
-                    }else{
-                            pData[i].olddata = oldpData
-                            pData[i].oldi = oldi
-                        let result = await massSpeakingtoolv7(oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))
-                        console.log(" --- ",result)
-                        console.log(' --- next step')
-                    }
-                }else{
-
-                }
-                resolve()
-            };
-            
-            tester.onstart = async function(e) { await fakeonend() }
-            tester.onend = async function(e) { await fakeonend() }
-        
-            pData[i].used = true
-            //console.log("Before")
-            fakeonstart()
-            console.log(" ----- pretend Speak")
-            fakeonend()
-            //window.speechSynthesis.speak(tester);
-              
-        }
-    })      
-
-            //tools
             //Every else thing has to go in here
+            
+            
+            
+            
+            
                 //New Page
-                    videoPageSetUp()
+                videoPageSetUp()
                 window.speechSynthesis.cancel();
-                //speaktool("Searcher",0)
-                await sleep(800)
-            
-                console.log("(V8) Test");
-            
-            
-                //caller
-                var promise_massSpeakingtoolv8 = massSpeakingtoolv8(0,pData,0,null,null)
-                promise_massSpeakingtoolv8.then(function(result) {
-                    console.log("promise_massSpeakingtoolv8 - Check:  2");
-                    console.log("promise_massSpeakingtoolv8 - Result: " + result);
+                var STARTpromise = rawspeaktool("MassSearcher",0)
+                STARTpromise.then(function(result) {
+                    var promise_massSpeakingtoolv9 = massSpeakingtoolv9(0,pData,0,null,null)
+                    promise_massSpeakingtoolv9.then(function(result) {
+                        console.log("promise_massSpeakingtoolv9 - Check:  2");
+                        console.log("promise_massSpeakingtoolv9 - Result: " + result);
+                    })                       
                 })
+
+             
             
-                
-                function pageEdittest(text,i){
-                    d3.selectAll("#text_holder *").remove()
-                    
-                    d3.select("#text_holder")
-                    .append("p")
-                    .attr("class","Tester_text")
-                    //.text(text[i].com)
-                    .text(textfixer(text[i].com))
-                    
-                    d3.select("#text_holder")
-                    .append("p")
-                    .attr("class","Tester_text")
-                    .text("This is the Level :" + text[i].level)
-                    
-                    d3.select("#text_holder")
-                    .append("p")
-                    .attr("class","Tester_text")
-                    .text("This is the index :" + (i+1) +"/"+text.length)
-                }
             
+            
+            
+            
+            //Testing Functions
                 function firsttestFunction(num,has){
-                    console.log("(V8) Test --- ("+has+")in: firstFunction(num)");
-                    console.log("(V8) Test --- ("+has+")the id:" +num );
-                                
-                    var deferred = $.Deferred();
-                    console.log(" ");
-                    var i = 0;
-                    var nextStep = function() {
-                        if (i<num) {
-                            // Do something
-                            console.log("("+has+")Step: " + i);
-                            i++;
-                            setTimeout(nextStep, 10); 
-                        }
-                        else {
-                            deferred.resolve(i);
-                        }
-                    }
-                    nextStep();
-                    return deferred.promise();
-                }
+                        console.log("(V8) Test --- ("+has+")in: firstFunction(num)");
+                        console.log("(V8) Test --- ("+has+")the id:" +num );
 
+                        var deferred = $.Deferred();
+                        console.log(" ");
+                        var i = 0;
+                        var nextStep = function() {
+                            if (i<num) {
+                                // Do something
+                                console.log("("+has+")Step: " + i);
+                                i++;
+                                setTimeout(nextStep, 10); 
+                            }
+                            else {
+                                deferred.resolve(i);
+                            }
+                        }
+                        nextStep();
+                        return deferred.promise();
+                    }
                 function secondtestFunction(){
-                    console.log("(V8) Test --- in: firstFunction(num)");
-                    
-                    //A an B run at the same time
-                    //C will run after A
-                    
-                    var promiseA = firsttestFunction(123,1);
-                    promiseA.then(function(result) { 
-                        
-                        console.log("Result: " + result);
-                        
-                        var promiseC = firsttestFunction(123,3);
-                        promiseC.then(function(result) {
-                            
-                            console.log("Result: " + result);
-                        
-                        });
-                        
-                    });
-                    
-                    var promiseB = firsttestFunction(123,2);
-                    promise.then(function(result) { 
-                        console.log("Result: " + result);
-                    
-                    });
-  
-                } 
-                //secondtestFunction()
-                
-                function thirdtestFunction(num,has,text){
-                    var deferred = $.Deferred();
-                    var allVoices = window.speechSynthesis.getVoices();
-                    var tester = new SpeechSynthesisUtterance();
-                    tester.voice = allVoices[5]
-                    tester.rate = 1
-                    tester.pitch = 1
-                    tester.text = text
-                    
-                    console.log("(V8) Test --- ("+has+")in: thirdFunction(num,has,text)");
-                    console.log("(V8) Test --- ("+has+")the id:" +num );
-                                
-                    tester.onstart = function(e) {console.log(" ----- pretend Speak start time",text)}
-                    tester.onend = function(e) {console.log(" ----- pretend Speak end time",text);deferred.resolve(num);}
-                    
-                    window.speechSynthesis.speak(tester);
-                    
-                    console.log(" ----- Happened");
-                    var i = 0;
-                    var nextStep = function() {
-                        if (i<num) {
-                            // Do something
-                            console.log("("+has+")Step: " + i);
-                            i++;
-                            setTimeout(nextStep, 10); 
-                        }
-                        else {
-                            deferred.resolve(i);
-                        }
-                    }
-                    //nextStep();
-                    
-                    return deferred.promise();
-                }
-                
-                function fouthtestFunction(){
-                    console.log("(V8) Test --- in: fouthFunction(num)");
-                    
-                    //A an B run at the same time
-                    //C will run after A
-                    
-                    var promiseA = thirdtestFunction(122,1,"testing 1");
-                    promiseA.then(function(result) { 
-                        
-                        console.log("Result: " + result);
-                        
-                        var promiseC = thirdtestFunction(123,2,"testing 2");
-                        promiseC.then(function(result) {
-                            
-                            console.log("Result: " + result);
-                        
-                        });
-                        
-                        
-                    });
-                    var promiseB = thirdtestFunction(124,3,"testing 3");
-                    promiseB.then(function(result) { 
-                        console.log("Result: " + result);
-                    
-                    });
-  
-                }
-                //fouthtestFunction()
-                
-                function fivthtestFunction(i){
-                    
-                    var deferred = $.Deferred();
-                    var allVoices = window.speechSynthesis.getVoices();
-                    var tester = new SpeechSynthesisUtterance();
-                    tester.voice = allVoices[5]
-                    tester.rate = 1
-                    tester.pitch = 1
-                    tester.text = ("Step: " + i)
-                    tester.onstart = function(e) {console.log(" ----- pretend Speak start time",("Step: " + i))}
-                    window.speechSynthesis.speak(tester);
-                    tester.onend = function(e) {
-                        console.log(" ----- pretend Speak end time",("Step: " + i));
-                        
-                        if (i != 10){
-                            var promiseTEMP = fivthtestFunction(i+1)
-                                promiseTEMP.then(function(result) {
-                                //deferred.resolve(i+1);
-                                //return deferred.promise();
-                            })  
-                        }else{
-                            deferred.resolve(i);
-                        }
-                        //deferred.resolve(i);
-                    }
-                    console.log("Step: " + i);
-                    return deferred.promise();
-                }
-                //var promiseE = fivthtestFunction(0)
-                //promiseE.then(function(result) {console.log("Result: " + result);})
-         
-                
-            
-            
-            function speaktool(Stext,i,r){
-                    var allVoices = window.speechSynthesis.getVoices();
-                    var tester = new SpeechSynthesisUtterance(); 
-                        tester.voice = allVoices[5]
-                        tester.rate = 1.3
-                        tester.pitch = 1
-                        tester.text = Stext;
-                        tester.onend = function(e) {
-                            console.log(" --- Test "+(i)+ "."+(r)+" Finished in " + (event.elapsedTime) + " millseconds.");
-                            console.log(" --- Test "+(i)+ "."+(r)+" Finished")
-                            //console.log("onend",e)
-                        };   
+                        console.log("(V8) Test --- in: firstFunction(num)");
 
-                    //console.log("Before") 
-                    window.speechSynthesis.cancel();
-                    window.speechSynthesis.speak(tester); 
-                    //console.log("After")   
-                }
-    //end of it
-    })}else {$('#modal1').openModal();}}
+                        //A an B run at the same time
+                        //C will run after A
+
+                        var promiseA = firsttestFunction(123,1);
+                        promiseA.then(function(result) { 
+
+                            console.log("Result: " + result);
+
+                            var promiseC = firsttestFunction(123,3);
+                            promiseC.then(function(result) {
+
+                                console.log("Result: " + result);
+
+                            });
+
+                        });
+
+                        var promiseB = firsttestFunction(123,2);
+                        promise.then(function(result) { 
+                            console.log("Result: " + result);
+
+                        });
+
+                    }//secondtestFunction()
+                function thirdtestFunction(num,has,text){
+                        var deferred = $.Deferred();
+                        var allVoices = window.speechSynthesis.getVoices();
+                        var tester = new SpeechSynthesisUtterance();
+                        tester.voice = allVoices[5]
+                        tester.rate = 1
+                        tester.pitch = 1
+                        tester.text = text
+
+                        console.log("(V8) Test --- ("+has+")in: thirdFunction(num,has,text)");
+                        console.log("(V8) Test --- ("+has+")the id:" +num );
+
+                        tester.onstart = function(e) {console.log(" ----- pretend Speak start time",text)}
+                        tester.onend = function(e) {console.log(" ----- pretend Speak end time",text);deferred.resolve(num);}
+
+                        window.speechSynthesis.speak(tester);
+
+                        console.log(" ----- Happened");
+                        var i = 0;
+                        var nextStep = function() {
+                            if (i<num) {
+                                // Do something
+                                console.log("("+has+")Step: " + i);
+                                i++;
+                                setTimeout(nextStep, 10); 
+                            }
+                            else {
+                                deferred.resolve(i);
+                            }
+                        }
+                        //nextStep();
+
+                        return deferred.promise();
+                    }
+                function fouthtestFunction(){
+                        console.log("(V8) Test --- in: fouthFunction(num)");
+
+                        //A an B run at the same time
+                        //C will run after A
+
+                        var promiseA = thirdtestFunction(122,1,"testing 1");
+                        promiseA.then(function(result) { 
+
+                            console.log("Result: " + result);
+
+                            var promiseC = thirdtestFunction(123,2,"testing 2");
+                            promiseC.then(function(result) {
+
+                                console.log("Result: " + result);
+
+                            });
+
+
+                        });
+                        var promiseB = thirdtestFunction(124,3,"testing 3");
+                        promiseB.then(function(result) { 
+                            console.log("Result: " + result);
+
+                        });
+
+                    }//fouthtestFunction()
+                function fivthtestFunction(i){
+
+                        var deferred = $.Deferred();
+                        var allVoices = window.speechSynthesis.getVoices();
+                        var tester = new SpeechSynthesisUtterance();
+                        tester.voice = allVoices[5]
+                        tester.rate = 1
+                        tester.pitch = 1
+                        tester.text = ("Step: " + i)
+                        tester.onstart = function(e) {console.log(" ----- pretend Speak start time",("Step: " + i))}
+                        window.speechSynthesis.speak(tester);
+                        tester.onend = function(e) {
+                            console.log(" ----- pretend Speak end time",("Step: " + i));
+
+                            if (i != 10){
+                                var promiseTEMP = fivthtestFunction(i+1)
+                                    promiseTEMP.then(function(result) {
+                                    //deferred.resolve(i+1);
+                                    //return deferred.promise();
+                                })  
+                            }else{
+                                deferred.resolve(i);
+                            }
+                            //deferred.resolve(i);
+                        }
+                        console.log("Step: " + i);
+                        return deferred.promise();
+                    }
+                    //var promiseE = fivthtestFunction(0)
+                    //promiseE.then(function(result) {console.log("Result: " + result);})      
+        
+            //end of it
+            })}else {$('#modal1').openModal();}
+        //(bottom) - TMSVidMain(Data,VidConfigs)
+        }
     
-    
-    
-    async function testering(){
+    // Left over code
+        async function testering(){
         var promiseD = thirdFunction(10,0,0);
                     promiseA.then(function(result) {
                         
@@ -2143,7 +2274,8 @@ return deferred.promise();
         
     }
        
-    //Start
-    primaryDataPromise()
+    //Starts
+        primaryDataPromise()
+        convertDataPromise()
 }
 mainFunction()
