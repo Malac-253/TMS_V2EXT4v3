@@ -1080,8 +1080,12 @@ var mainFunction = function(){
                 //finds the words count
                 function wordcount(str) {
                         
-                        var ans = str.split(" ").length;
-                        if (str == undefined){ ans = 1; }
+                        var ans = 1
+                        if (str == undefined){ 
+                            ans = 1; 
+                        }else{ 
+                            ans = str.split(" ").length;  
+                        }
                         return ans
                 }
             
@@ -1089,7 +1093,7 @@ var mainFunction = function(){
                 function resumeInfinity(text) {
                         window.speechSynthesis.resume();
 
-                        var wc = wordcount(text) 
+                        //var wc = wordcount(text) 
                         //if (wc <= 50)
 
                         timeoutResumeInfinity = setTimeout(resumeInfinity, 3600);
@@ -2000,13 +2004,14 @@ var mainFunction = function(){
             
                 //New Page
                 videoPageSetUp()
+                //
                 window.speechSynthesis.cancel();
                 var STARTpromise = rawspeaktool("MassSearcher",0)
                 STARTpromise.then(function(result) {
                     var promise_massSpeakingtoolv9 = massSpeakingtoolv9(0,pData,0,null,null)
                     promise_massSpeakingtoolv9.then(function(result) {
-                        console.log("promise_massSpeakingtoolv9 - Check:  2");
-                        console.log("promise_massSpeakingtoolv9 - Result: " + result);
+                        //console.log("promise_massSpeakingtoolv9 - Check:  2");
+                        //console.log("promise_massSpeakingtoolv9 - Result: " + result);
                     })                       
                 })
 
