@@ -461,7 +461,7 @@ var mainFunction = function(){
         //console.log("*******(PATH TEST)",Data.posts)
             
             //addconvertInfo()
-            putinreplyMainConvertPatch(Data)
+            putinreplyMainConvertPatch(Data,Datalink,Pastlink)
             putinreplyMain(Data,"#R-Holder",Datalink,Pastlink)
             //putinreplyMainConvertPatch()
                 //d3.select("#T-info")
@@ -477,7 +477,7 @@ var mainFunction = function(){
     //Other fuctions
     
         //patch to reply adder for converter
-        function putinreplyMainConvertPatch(Data) {
+        function putinreplyMainConvertPatch(Data,Datalink,Pastlink) {
             //clean house
             d3.select("#CONbutton2").remove()
             //Input
@@ -490,13 +490,13 @@ var mainFunction = function(){
                 .text("Video it")
                 .on("click",function(){
                     //window.open('convert.html', '_blank');
-                    videotype(Data);
+                    videotype(Data,Datalink,Pastlink);
                 })
         }
     
         //main Post adder function
         function putinreplyMain(Data,where,Datalink,Pastlink) {
-            var pData = postConverter(Data.posts)
+            var pData = postConverter(Data.posts,Datalink,Pastlink)
             
             
             
@@ -527,7 +527,7 @@ var mainFunction = function(){
             var sizefix = 3
             pData.forEach(function(aData){
                 if(aData.ext == ".jpg"){
-                    // 
+                    
                     d3.select("#P" + aData.idnum + aData.chp)
                     .append("p")
                     .append("img")
@@ -701,7 +701,7 @@ var mainFunction = function(){
              }
         
         //Gets post and puts them with thire replys
-        var postConverter = function(data) {
+        var postConverter = function(data,Datalink,Pastlink) {
             var ans = []
             var Hnums = []
             //console.log("************************", data)
@@ -731,9 +731,13 @@ var mainFunction = function(){
                     currPost.w = aPost.w
                     currPost.h = aPost.h
                     //video Update
+                    currPost.Datalink = Datalink
+                    currPost.Pastlink = Pastlink
                     currPost.olddata = null
                     currPost.oldi = null
                     currPost.used = false
+                    currPost.verimage = false
+                    currPost.totalL = data.length
             
             
             
@@ -801,10 +805,13 @@ var mainFunction = function(){
                                     thePost.w = onePost.w
                                     thePost.h = onePost.h
                                     //video Update
+                                    thePost.Datalink = Datalink
+                                    thePost.Pastlink = Pastlink
                                     thePost.olddata = oldplace
                                     thePost.oldi = i
                                     thePost.used = false
-
+                                    thePost.verimage = false
+                                    thePost.totalL = data.length
                                 
                                 var postnum = []
                                 getReplys(data,thePost.no,thePost.replies,(level),thePost.chp,replyBox)//check for replys
@@ -928,8 +935,8 @@ var mainFunction = function(){
         // All video Helper stuff
         
         //this will never work, here to distract and remind u that failure is part of the process
-        function videotypeFAIL(Data) {
-            var pData = postConverter(Data.posts)
+        function videotypeFAIL(pData) {
+            //var pData = postConverter(Data.posts)
 
             console.log("pData",pData)
             console.log("pData[1]com : ",pData[1].com)
@@ -983,6 +990,11 @@ var mainFunction = function(){
             
             d3.select("head").append("script").attr("src", "/js/jquery-ui-personalized-1.5.2.packed.js").attr("language","JavaScript").attr("type","text/javascript")
             d3.select("head").append("script").attr("src", "/js/sprinkle.js").attr("language","JavaScript").attr("type","text/javascript")
+            
+            d3.select("head").append("script").attr("src", "https://d3plus.org/js/d3.js")
+            d3.select("head").append("script").attr("src", "https://d3plus.org/js/d3plus.js")
+            
+            
         }
     
         //adds link to java code in body, removes it from head
@@ -995,31 +1007,192 @@ var mainFunction = function(){
         }
     
         //Gets configs for video
-        function videoPageInfoGetter(){
-            //Start button
+        function videoPageInfoGetter(pData,Datalink,Pastlink){
+        
+            //Adds Start button - in speak_button_holder
             d3.select("body")
             .append("div")
-            .attr("id","speak_holder")
+            .attr("id","speak_button_holder")
             .append("button")
             .attr("id","speak")
-            .text("tester")
-             
-            //adder
+            .text("Start Button")
+            
+            //Adds text area - in Video_text_holder
             d3.select("body")
             .append("div")
             .attr("id","text_holder")
+            .append("p")
+            .text("Hit Submit then start")
+            .attr("id","TEMPtext_holder")
             
-            //inputs
+            d3.select("#text_holder")
+            .append("svg")
+            .attr("id","svg_Video_holder")
+            
+            //Adds configs area - in configs_form_holder
+            d3.select("body")
+            .append("div")
+            .attr("id","configs_form_holder")
+            
+            //Adds Configs Submit button
+            d3.select("#configs_form_holder")
+            .append("input")
+            .attr("class","configs_form_question")
+            .attr("type","submit")
+            .attr("id","pGetSUBMIT")
+            
+            
+            
             var configs = {}
+            var configsNames = []
+            newConfigHelperSetter("SVGwidth",0,2000,1920,configsNames)
+            newConfigHelperSetter("SVGheight",0,2000,1080,configsNames)
+            newConfigHelperSetter("SVGBackgroundborder_stroke_width",0,200,50,configsNames)
             
-            configs["test"] = "jonh"
+            var imagelistresult;
+            var imagelist = []
+            imagelist = checkimages(pData,Datalink,Pastlink,imagelist)
+            console.log(imagelist)
+            imagelist.then(function(result) {
+                
+                configs["ALLDATA"] = pData
+                
+                imagelistresult = result
+                console.log(result[0])
+                console.log(imagelistresult) 
+                
+                for (i = 0; i < configsNames.length; i++){newConfigHelper("#configs_form_holder",configsNames[i].name,configsNames[i].min,configsNames[i].max,configsNames[i].fab)}
+           
+                //adds to configs
+                d3.select("#pGetSUBMIT").on("click",function (e){
+                    for (i = 0; i < configsNames.length; i++) {configs[configsNames[i].name] = newConfigHelperGetter(configsNames[i].name)}
+
+                    for (i = 0; i < imagelistresult.length; i++) {
+                        //console.log("imagelistresult",result[i]);
+                        var namedata = document.getElementById(("inputidforimage"+result[i]));
+                        //console.log("namedata",namedata.value);
+                        if(namedata.value == 0){checkimagesver(pData,result[i])}
+                    }
+                    //Print to console
+                    //console.log("configs",configs);
+                })
+            })
             
+            
+           
+            //configs["ALLDATA"] = pData
             return configs 
         }
+        //checked images are aloud to pase
+        async function checkimagesver(pData,nums){
+            await sleep(1)
+            for (i = 0; i < pData.length; i++) {
+                if(pData[i].replies.length > 0 ){
+                    checkimagesver(pData[i].replies,nums)
+                }
+                if(pData[i].no == nums){
+                pData[i].verimage = true
+                pData[i].verimageLINK = "http://is2.4chan.org/"+ pData[i].Pastlink +"/"+pData[i].tim+pData[i].ext    
+                //console.log("http://is2.4chan.org/"+ pData[i].Pastlink +"/"+pData[i].tim+pData[i].ext);   
+                }
+           }
+        }
     
+        //adding the images to be checked
+        async function checkimages(pData,Datalink,Pastlink,imagelist){
+            //console.log(pData) 
+            await sleep(1)
+            for (i = 0; i < pData.length; i++) {
+                if(pData[i].replies.length > 0 ){
+                    //console.log(pData[i].replies) 
+                    checkimages(pData[i].replies,Datalink,Pastlink,imagelist)
+                }
+                if (pData[i].filename != undefined){
+                    
+                    imagelist.push(pData[i].no)
+                    
+                    d3.select("#configs_form_holder")
+                    .append("p")
+                    .attr("class","configs_form_question image_ver")
+                    .attr("id","idforimage"+pData[i].no)
+                    .text("Confirm this image is ok : (0 = Yes || 1 = NO)")
+                    .append("input")
+                    .attr("class","configs_form_box")
+                    .attr("id","inputidforimage"+pData[i].no)
+                    .attr("type","number")
+                    .attr("name","congifforimage"+pData[i].no)
+                    .attr("max",1)
+                    .attr("min",0)
+                    .attr("value",0)
+                    if(pData[i].ext != ".webm"){
+                        d3.select("#idforimage"+pData[i].no)
+                        .append("img")
+                        .attr("src",mediaGetter(pData[i],Datalink,Pastlink))
+                        .attr("height",pData[i].h/5)
+                        .attr("width",pData[i].w/5)
+                       //<img src="smiley.gif" alt="Smiley face" height="42" width="42"> 
+                    }else{
+                        d3.select("#idforimage"+pData[i].no)
+                        .append("video")
+                        .attr("height",pData[i].h/5)
+                        .attr("width",pData[i].w/5)
+                        .attr("autoplay","")
+                        .text("Your browser does not support the video tag.")
+                        .append("source")
+                        .attr("src",function(aData){return ("http://is2.4chan.org/"+ Pastlink +"/"+aData.tim+aData.ext)})
+                        .attr("type","video/webm")
+                    }
+                }
+            }
+          return imagelist 
+        }
+    
+        //Gets links for media
+        function mediaGetter(aData,Datalink,Pastlink){
+                //console.log(aData)
+                var imageLink = "http://is2.4chan.org/"+ aData.Pastlink +"/"+aData.tim+aData.ext 
+                aData.imageLink = imageLink 
+        return imageLink
+        }
+    
+        //configs Setter helper function
+        function newConfigHelperSetter(name,min,max,fab,configsNames){ 
+            var oneconfigs = {}
+                oneconfigs.name = name
+                oneconfigs.min = min
+                oneconfigs.max = max
+                oneconfigs.fab = fab
+            configsNames.push(oneconfigs)
+        }
+        
+        //configs Getter helper function
+        function newConfigHelperGetter(name){
+            var namedata = document.getElementById(("inputGet"+name));
+            //console.log(name,namedata.value);
+            return Number(namedata.value)
+        }
+                    
+        //Gets the config numbers
+        function newConfigHelper(placeid,questid,max,min,fab){ 
+            d3.select(placeid)
+            .append("p")
+            .attr("class","configs_form_question")
+            .attr("id",("pGet"+questid))
+            .text(questid + " - Quantity (between "+max+" and "+min+"): ")
+            .append("input")
+            .attr("class","configs_form_box")
+            .attr("id",("inputGet"+questid))
+            .attr("type","number")
+            .attr("name",("Config"+questid))
+            .attr("max",max)
+            .attr("min",min)
+            .attr("value",fab)
+          }
+      
     //video Main stuff
-        async function videotype(Data) {  
+        async function videotype(Data,Datalink,Pastlink) {  
             
+            var pData = postConverter(Data.posts,Datalink,Pastlink)
             //moves code linkes from body.
                 addLinkCodeHead()
             
@@ -1028,26 +1201,25 @@ var mainFunction = function(){
                     //addLinkCodeBody()
             
             //Getting Video Configs
-                var VidConfigs = videoPageInfoGetter()
+                var VidConfigs = videoPageInfoGetter(pData)
             
                 console.log(VidConfigs)
             
             //Starting main system
-                TMSVidMain(Data,VidConfigs)          
+                TMSVidMain(VidConfigs.ALLDATA,VidConfigs)          
         }
     
     
     //The End Game, the goal of this whold thing
-    async function TMSVidMain(Data,VidConfigs){
+    async function TMSVidMain(pData,VidConfigs){
     //(top) - TMSVidMain(Data,VidConfigs)
         
         //main if state
         if ('speechSynthesis' in window) {
         d3.select('#speak').on("click",async function (){
-            
             //getting data
-            var pData = postConverter(Data.posts)
-            
+                
+                
             //helpers
                 //Sets the WPM of the thing being said
                 var wordspermin = function(words){
@@ -1096,7 +1268,7 @@ var mainFunction = function(){
                         //var wc = wordcount(text) 
                         //if (wc <= 50)
 
-                        timeoutResumeInfinity = setTimeout(resumeInfinity, 3600);
+                        timeoutResumeInfinity = setTimeout(resumeInfinity, 3950);
                 }
 
                 //remove HTML from texts
@@ -1107,7 +1279,10 @@ var mainFunction = function(){
 
             //tools    
                 //Uses configs for video
-                function videoPageSetUp() {}
+                function videoPageSetUp() {
+                    d3.selectAll("#speak_button_holder *").remove()
+                    d3.selectAll("#configs_form_holder *").remove()
+                }
             
                 //fuction to fix spoken and seen text
                 function textfixer(text){
@@ -1152,26 +1327,289 @@ var mainFunction = function(){
                     }
             
                 //managing page event
-                function pageEdittest(text,i,oldpData,oldi){
-                        d3.selectAll("#text_holder *").remove()
-
-                        d3.select("#text_holder")
+                function pageEdittest(text,i,oldpData,oldi,VidConfigs){
+                        //console.log(text,i,oldpData,oldi,VidConfigs)
+                        d3.selectAll("#svg_Video_holder *").remove()
+                        d3.selectAll("#TEMPtext_holder").remove() 
+                        
+                        SVGobject = d3.select("#svg_Video_holder")
+                            SVGsetter(SVGobject,VidConfigs)
+                            videoBackgroundArt(SVGobject,VidConfigs)
+                    
+                            videoPostArt(SVGobject,VidConfigs,text,i,oldpData,oldi)
+                    
+                    
+                        d3.select("#svg_Video_holder")
                         .append("p")
                         .attr("class","Tester_text")
                         //.text(text[i].com)
                         .text(textfixer(text[i].com))
 
-                        d3.select("#text_holder")
+                        d3.select("#svg_Video_holder")
                         .append("p")
                         .attr("class","Tester_text")
                         .text("This is the Level :" + text[i].level)
 
-                        d3.select("#text_holder")
+                        d3.select("#svg_Video_holder")
                         .append("p")
                         .attr("class","Tester_text")
                         .text("This is the index :" + (i+1) +"/"+text.length)
                     }
+            //video art
+                //video art mains
+                    //Sets the SVG
+                    function SVGsetter(SVGobject,VidConfigs){
+                    SVGobject
+                        .attr("width",VidConfigs.SVGwidth)
+                    SVGobject
+                        .attr("height",VidConfigs.SVGheight)
+      
+                }
+            
+                    //Sets the videoBackgroundArt
+                    function videoBackgroundArt(SVGobject,VidConfigs){ 
+                        SVGobject
+                            .append("g")
+                            .attr("id","BackgroundArtGroup");
 
+                        BackgroundArtGroup = d3.select("#BackgroundArtGroup");
+
+                        BackgroundArtGroup
+                            .append("rect")
+                            .attr("width",VidConfigs.SVGwidth)
+                            .attr("height",VidConfigs.SVGheight)
+                            .attr("style","fill:#222222;stroke-width:"+VidConfigs.SVGBackgroundborder_stroke_width+";stroke:rgb(0,0,0)")
+                            .attr("x","0")
+                            .attr("y","0")
+                        
+                    }
+                
+                    //Sets up the post for the video
+                    async function videoPostArt(SVGobject,VidConfigs,text,i,oldpData,oldi){ 
+                        
+                        //https://maketext.io/
+                        
+                        //add to video
+                        SVGobject
+                            .append("g")
+                            .attr("id","PostArtGroup");
+                        
+                        //Giveing it a name
+                        PostArtGroup = d3.select("#PostArtGroup");
+                        
+                        if((i == 0)&&(oldpData == null)&&(text[i].sub != undefined)){
+                        //Then is Lead Comment
+                            //adds in comment
+                            PostArtGroup
+                            .append("text")
+                            .attr("x",175)
+                            .attr("y",(VidConfigs.SVGheight/3))
+                            .attr("fill","white")
+                            .attr("style","font-size: 40px; font-weight: lighter;")
+                            .attr("id","PostArtGroupRectText")
+
+                            d3plus.textwrap()
+                            .container(d3.select("#PostArtGroupRectText"))
+                            .shape('square')
+                            .width(1700)
+                            .height(550)
+                            .resize(false)
+                            .text(textfixer(text[i].com))
+                            .draw(); 
+                            
+                            //add arrows and box
+                                //arrow up
+                                PostArtGroup
+                                .append("polygon")
+                                .attr("x",100)
+                                .attr("y",360)
+                                .attr("points","100,360 130,420 70,420")
+                                .attr("style","fill:#FF8b60;stroke:none;stroke-width:1")
+
+                                //Comment line
+                                PostArtGroup
+                                .append("rect")
+                                .attr("width",5)
+                                .attr("height",220)
+                                .attr("x",150)
+                                .attr("y",330)
+                                .attr("id","PostArtGroupReplytext")
+                                .attr("text-anchor","middle")
+                                //.attr("dominant-baseline","middle")
+                                .attr("style","fill:#545452;stroke:none;stroke-width:1;font-family: Verdana;")
+                                //.text("no:"+ text[i].no)
+
+
+                                //arrow Down
+                                PostArtGroup
+                                .append("polygon")
+                                .attr("x",100)
+                                .attr("y",360)
+                                .attr("points","100,530 130,470 70,470")
+                                .attr("style","fill:#C6C6C6;stroke:none;stroke-width:1")
+                           
+                            //comment heading
+                            PostArtGroup
+                                .append("text")
+                                .attr("width",5)
+                                .attr("height",200)
+                                .attr("x",165)
+                                .attr("y",350)
+                                .attr("class","PostArtGroupPosttext")
+                                .attr("id","PostArtGroupPosttextHolder")
+                            
+                            PostArtGroupHeadText = d3.select("#PostArtGroupPosttextHolder");
+                                
+                            //Posted By
+                                SVGgroupArtAdderTSPAN(5,200,175,350,
+                                         "PostArtGroupPosttext","PostArtGroupPosttext1","fill:#A5A4A4;stroke:none;stroke-width:1", "Posted By :",PostArtGroupHeadText)
+                            
+                                //SVGgroupArtAdderTE(width,height,x,y,
+                                    //classer,ider,style,
+                                        //text,Grouper)
+                            
+                                //Name
+                                SVGgroupArtAdderTSPAN(5,200,340,350,
+                                         "PostArtGroupPosttext","PostArtGroupPosttext2","fill:#149EF0;stroke:none;stroke-width:1", text[i].name,PostArtGroupHeadText)
+                            
+                                //SVGgroupArtAdderTE(width,height,x,y,
+                                    //classer,ider,style,
+                                        //text,Grouper)
+                              
+                                //Sub title lable
+                                SVGgroupArtAdderTSPAN(5,200,530,350,
+                                         "PostArtGroupPosttext","PostArtGroupPosttext3","fill:#A5A4A4;stroke:none;stroke-width:1", "Sub:",PostArtGroupHeadText)
+                            
+                                //SVGgroupArtAdderTE(width,height,x,y,
+                                    //classer,ider,style,
+                                        //text,Grouper)
+    
+                               //Sub title
+                                SVGgroupArtAdderTSPAN(5,200,600,350,
+                                        "PostArtGroupPosttext","PostArtGroupPosttext3","fill:#3BCB56;stroke:none;stroke-width:1", text[i].sub,PostArtGroupHeadText)
+
+                                //SVGgroupArtAdderTE(width,height,x,y,
+                                    //classer,ider,style,
+                                        //text,Grouper)
+                               
+                                 //Date and time
+                                PostArtGroupRectText = d3.select("#PostArtGroupRectText");
+                                PostArtGroupRectText
+                                .append("tspan")
+                                .attr("x",175)
+                                .attr("dy",40)
+                                .attr("class","PostArtGroupPosttext")
+                                .attr("id","PostArtGroupPosttext3")
+                                .attr("style","fill:#A5A4A4;stroke:none;stroke-width:1")
+                                .text(text[i].now) 
+
+                        }
+                        else{
+                         //Then is not Lead Comment
+                            //adds in comment
+                            PostArtGroup
+                            .append("text")
+                            .attr("x",175)
+                            .attr("y",(VidConfigs.SVGheight/3))
+                            .attr("fill","white")
+                            .attr("style","font-size: 40px; font-weight: lighter;")
+                            .attr("id","PostArtGroupRectText")
+
+                            d3plus.textwrap()
+                            .container(d3.select("#PostArtGroupRectText"))
+                            .shape('square')
+                            .width(1700)
+                            .height(550)
+                            .resize(false)
+                            .text(textfixer(text[i].com))
+                            .draw(); 
+                            
+                            //add arrows and box
+                                //arrow up
+                                PostArtGroup
+                                .append("polygon")
+                                .attr("x",100)
+                                .attr("y",360)
+                                .attr("points","100,360 130,420 70,420")
+                                .attr("style","fill:#FF8b60;stroke:none;stroke-width:1")
+
+                                //Comment line
+                                PostArtGroup
+                                .append("rect")
+                                .attr("width",5)
+                                .attr("height",220)
+                                .attr("x",150)
+                                .attr("y",330)
+                                .attr("id","PostArtGroupReplytext")
+                                .attr("text-anchor","middle")
+                                //.attr("dominant-baseline","middle")
+                                .attr("style","fill:#545452;stroke:none;stroke-width:1;font-family: Verdana;")
+                                //.text("no:"+ text[i].no)
+
+
+                                //arrow Down
+                                PostArtGroup
+                                .append("polygon")
+                                .attr("x",100)
+                                .attr("y",360)
+                                .attr("points","100,530 130,470 70,470")
+                                .attr("style","fill:#C6C6C6;stroke:none;stroke-width:1")
+                           
+                            //comment heading
+                            PostArtGroup
+                                .append("text")
+                                .attr("width",5)
+                                .attr("height",200)
+                                .attr("x",165)
+                                .attr("y",350)
+                                .attr("class","PostArtGroupPosttext")
+                                .attr("id","PostArtGroupPosttextHolder")
+                            
+                            PostArtGroupHeadText = d3.select("#PostArtGroupPosttextHolder");
+                                
+                            //Posted By
+                                SVGgroupArtAdderTSPAN(5,200,175,350,
+                                         "PostArtGroupPosttext","PostArtGroupPosttext1","fill:#A5A4A4;stroke:none;stroke-width:1", "Posted By :",PostArtGroupHeadText)
+                            //Name
+                                SVGgroupArtAdderTSPAN(5,200,340,350,
+                                         "PostArtGroupPosttext","PostArtGroupPosttext2","fill:#149EF0;stroke:none;stroke-width:1", (text[i].name),PostArtGroupHeadText)
+                            //Name
+                                SVGgroupArtAdderTSPAN(5,200,340,350,
+                                         "PostArtGroupPosttext","PostArtGroupPosttext2","fill:#ED001C;stroke:none;stroke-width:1", (text[i].no),PostArtGroupHeadText)
+                            
+                                //SVGgroupArtAdderTE(width,height,x,y,
+                                    //classer,ider,style,
+                                        //text,Grouper)
+                               
+                                
+                            //Date and time
+                            PostArtGroupRectText = d3.select("#PostArtGroupRectText");
+                            PostArtGroupRectText
+                                .append("tspan")
+                                .attr("x",175)
+                                .attr("dy",40)
+                                .attr("class","PostArtGroupPosttext")
+                                .attr("id","PostArtGroupPosttext3")
+                                .attr("style","fill:#A5A4A4;stroke:none;stroke-width:1")
+                                .text(text[i].now) 
+                            
+                        }
+                        
+
+                    }    
+            function SVGgroupArtAdderTSPAN(width,height,x,y,classer,ider,style,text,Grouper){
+                Grouper
+                .append("tspan")
+                .attr("width",width)
+                .attr("height",height)
+                .attr("dx",10)
+                .attr("y",y)
+                .attr("class",classer)
+                .attr("id",ider)
+                .attr("style",style)
+                .text(text)
+            }
+            
             //mains - massSpeakingtool managers
                 //Handles speaking
                 //main manager (1) version 1-7 - failures
@@ -1670,7 +2108,7 @@ var mainFunction = function(){
                                 console.log(" ----- pretend Speak start time",pData[i].com)
                             }
                             var fakeonend = async function(e) {    
-                                await sleep(800)
+                                //await sleep(800)
                                 console.log(" ----- pretend Speak end time")
 
                                 if (pData[i].replies.length != 0) { //This is to step in to a level of replys (Steps In)
@@ -1875,13 +2313,14 @@ var mainFunction = function(){
                     }
             
                 //main manager (2) version 9 - mission ready
-                async function massSpeakingtoolv9(tester,pData,i,oldpData,oldi){
+                async function massSpeakingtoolv9(tester,pData,i,oldpData,oldi,VidConfigs){
                     //Start of massSpeakingtoolv9
+                        //console.log("Before each speak ?")
                         var deferred = $.Deferred();
                         var timeoutResumeInfinity
                         window.speechSynthesis.cancel();
                         if(pData.length == i ){
-                            var promiseTEMP =  massSpeakingtoolv9(tester,oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi)
+                            var promiseTEMP =  massSpeakingtoolv9(tester,oldpData,(oldi)+1,oldpData[0].olddata,oldpData[0].oldi,VidConfigs)
                             promiseTEMP.then(function(result) {
                                 deferred.resolve(i);
                             }) 
@@ -1897,7 +2336,7 @@ var mainFunction = function(){
                             var fakeonstart = async function(e) {
                                 resumeInfinity(pData[i].com);
                                 //video manger test
-                                pageEdittest(pData,i,oldpData,oldi)
+                                pageEdittest(pData,i,oldpData,oldi,VidConfigs)
                             }
                             //fakeonend
                             var fakeonend = function(e) {
@@ -1914,7 +2353,7 @@ var mainFunction = function(){
                                     pData[i].replies[0].oldi = i
                                     pData[i].replies[0].olddata = pData
                                     //console.log(" ----- promiseTEMP type 1 - (Steps In)");
-                                    var promiseTEMP = massSpeakingtoolv9(tester,pData[i].replies,0,pData,i)
+                                    var promiseTEMP = massSpeakingtoolv9(tester,pData[i].replies,0,pData,i,VidConfigs)
                                     promiseTEMP.then(function(result) { 
                                         //This is to step to the next replys (Steps Down)
                                         Steps_do_helper(tester,pData,i,oldpData,oldi)
@@ -1938,7 +2377,7 @@ var mainFunction = function(){
                                             }
                                         }
                                         pData[i+1].olddata = pData[i].olddata
-                                        var promiseTEMP =  massSpeakingtoolv9(tester,pData,(i+1),pData[i].olddata,pData[i].oldi)
+                                        var promiseTEMP =  massSpeakingtoolv9(tester,pData,(i+1),pData[i].olddata,pData[i].oldi,VidConfigs)
                                         promiseTEMP.then(function(result) { 
                                             //This is to step to the next lead (Steps Out)
                                             Steps_ou_helper(tester,pData,i,oldpData,oldi)
@@ -1956,7 +2395,7 @@ var mainFunction = function(){
                                     if (((i+1) == pData.length)&&(oldpData != null)&&(oldi != null)&&(!(pData[i].used))){ //This is to step to the nextlead (Steps Out)
                                         pData[i].olddata = oldpData
                                         pData[i].oldi = oldi
-                                        var promiseTEMP =  massSpeakingtoolv9(tester,oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi))
+                                        var promiseTEMP =  massSpeakingtoolv9(tester,oldpData,(oldi)+1,(pData[i].olddata[0].olddata),(pData[i].olddata[0].oldi),VidConfigs)
                                         promiseTEMP.then(function(result) { 
                                             //deferred.resolve(i);
 
@@ -1997,30 +2436,30 @@ var mainFunction = function(){
                     }
 
             //Every else thing has to go in here
-            
-            
+                console.log(VidConfigs);
+                
             
             
             
                 //New Page
                 videoPageSetUp()
-                //
-                window.speechSynthesis.cancel();
-                var STARTpromise = rawspeaktool("MassSearcher",0)
-                STARTpromise.then(function(result) {
-                    var promise_massSpeakingtoolv9 = massSpeakingtoolv9(0,pData,0,null,null)
-                    promise_massSpeakingtoolv9.then(function(result) {
+                //testing
+                //console.log(pData,VidConfigs)
+                pageEdittest(VidConfigs.ALLDATA,0,null,null,VidConfigs)
+            
+                //text,i,oldpData,oldi,VidConfigs
+            
+            //THE REAL CODE
+                //window.speechSynthesis.cancel();
+                //var STARTpromise = rawspeaktool("MassSearcher",0)
+                //STARTpromise.then(function(result) {
+                    //var promise_massSpeakingtoolv9 = massSpeakingtoolv9(0,VidConfigs.ALLDATA,0,null,null,VidConfigs)
+                    //promise_massSpeakingtoolv9.then(function(result) {
                         //console.log("promise_massSpeakingtoolv9 - Check:  2");
                         //console.log("promise_massSpeakingtoolv9 - Result: " + result);
-                    })                       
-                })
-
-             
-            
-            
-            
-            
-            
+                    //})                       
+                //})
+            //THE REAL CODE
             //Testing Functions
                 function firsttestFunction(num,has){
                         console.log("(V8) Test --- ("+has+")in: firstFunction(num)");
@@ -2168,7 +2607,7 @@ var mainFunction = function(){
         }
     
     // Left over code
-        async function testering(){
+        async function trash(){
         var promiseD = thirdFunction(10,0,0);
                     promiseA.then(function(result) {
                         
@@ -2278,9 +2717,9 @@ var mainFunction = function(){
         
         
     }
-       
     //Starts
         primaryDataPromise()
         convertDataPromise()
 }
+
 mainFunction()
